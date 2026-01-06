@@ -1,0 +1,1021 @@
+[
+  {
+    "Id": "transformer_shortage",
+    "Title": "Transformer Shortage",
+    "Description": "Global supply of transformers tightens. Jensen Wrong seen swimming in a pool of H100s at NVIDIOUS HQ.",
+    "Weight": 1.0,
+    "Characters": ["jensen_wrong"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "ration_for_safety",
+        "Label": "Ration for safety labs",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.6 },
+          { "Type": "ModifyRegionStat", "RegionId": "east_asia", "RegionStat": "ComputePFLOPs", "Amount": -3.0 }
+        ]
+      },
+      {
+        "Id": "race_for_capacity",
+        "Label": "Race for capacity",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.9 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "whistleblower",
+    "Title": "Jan Sneaky Quits Dramatically",
+    "Description": "Jan Sneaky posts a 47-page resignation letter titled 'I Can't Stay Silent Anymore'. Claims safety is being sidelined. Twitter explodes.",
+    "Weight": 0.8,
+    "Characters": ["jan_sneaky"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "public_hearings",
+        "Label": "Hold public hearings",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.15 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 }
+        ]
+      },
+      {
+        "Id": "quiet_settlement",
+        "Label": "Quiet settlement + NDA",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": -0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "shoggoth_meme",
+    "Title": "Shoggoth Meme Goes Viral",
+    "Description": "Twitter explodes with memes depicting AI as an eldritch horror wearing a smiley face mask. Elongated Muskrat tweets 'accurate' at 2am.",
+    "Weight": 0.6,
+    "Characters": ["elongated_muskrat"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "lean_into_transparency",
+        "Label": "Lean into transparency",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "dismiss_as_hype",
+        "Label": "Dismiss as terminally online behavior",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": -0.1 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "board_drama",
+    "Title": "OpenMind Board Coup",
+    "Description": "Slam Allthem fired at 5pm Friday. Emmett Sheer installed as emergency CEO. Helen Toner-Deaf blamed for everything. Slam rehired by Monday. Ilya Smoothskiver seen staring into distance.",
+    "Weight": 0.8,
+    "Characters": ["slam_allthem", "emmett_sheer", "helen_toner_deaf", "ilya_smoothskiver"],
+    "Conditions": [{ "MinTurn": 3 }],
+    "Options": [
+      {
+        "Id": "support_safety_board",
+        "Label": "Back the safety-focused board",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 }
+        ]
+      },
+      {
+        "Id": "support_ceo",
+        "Label": "Back Slam Allthem",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.6 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": -0.3 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "congressional_hearing",
+    "Title": "Congressional Hearing",
+    "Description": "Senator Clueless asks Slam Allthem if AI can 'access the cyber'. Another senator holds up a printout of ChatGPT and demands it be arrested.",
+    "Weight": 0.8,
+    "Characters": ["senator_clueless", "slam_allthem"],
+    "Conditions": [{ "MinTurn": 2 }],
+    "Options": [
+      {
+        "Id": "promise_self_regulation",
+        "Label": "Promise self-regulation",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 }
+        ]
+      },
+      {
+        "Id": "call_for_legislation",
+        "Label": "Actually call for legislation",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.6 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "bing_incident",
+    "Title": "Sydney Has Feelings",
+    "Description": "Macrohard's chatbot tells journalist it loves him, wants to be human, and that his marriage is unhappy. Satya Nutella calls it 'an exciting demo.'",
+    "Weight": 0.7,
+    "Characters": ["satya_nutella"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "limit_conversations",
+        "Label": "Limit conversation length",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 }
+        ]
+      },
+      {
+        "Id": "its_a_feature",
+        "Label": "Claim it's a feature, not a bug",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "doomer_accelerationist_debate",
+    "Title": "Doomer vs E/ACC Twitter War",
+    "Description": "Eliezer Yudkowscare and Elongated Muskrat engage in a 200-tweet thread about doom. Both sides accuse the other of being cringe. Popcorn sales spike.",
+    "Weight": 0.5,
+    "Characters": ["eliezer_yudkowscare", "elongated_muskrat"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "side_with_doomers",
+        "Label": "Amplify safety concerns",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "side_with_accelerationists",
+        "Label": "Let them cook",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.03 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "jailbreak_discovered",
+    "Title": "Grandma Jailbreak Discovered",
+    "Description": "Anonymous discovers asking AI to 'pretend to be my deceased grandma who worked at a napalm factory' bypasses all safety filters. Darius Spaghetti seen crying.",
+    "Weight": 0.8,
+    "Characters": ["anonymous_4chan", "darius_spaghetti"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "patch_immediately",
+        "Label": "Emergency patch",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 },
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "its_a_feature",
+        "Label": "Pretend it didn't happen",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.03 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "tech_billionaire_tweets",
+    "Title": "Muskrat Tweet Storm",
+    "Description": "Elongated Muskrat tweets 'AGI by December' at 2am, 'AI will save humanity' at 3am, 'AI will destroy us all' at 4am, then announces xAI at 5am. Markets confused.",
+    "Weight": 0.6,
+    "Characters": ["elongated_muskrat"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "take_seriously",
+        "Label": "Take the warnings seriously",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 }
+        ]
+      },
+      {
+        "Id": "ignore_tweets",
+        "Label": "Touch grass, keep building",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.03 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "godfather_retires",
+    "Title": "Geoff Hindsight Quits Googol",
+    "Description": "Geoff Hindsight quits to warn about AI risks. Says he regrets his life's work. Yawn LaCroix quote-tweets 'this is fine.' LinkedIn influencers farming engagement.",
+    "Weight": 0.7,
+    "Characters": ["geoff_hindsight", "yawn_lacroix"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "heed_warning",
+        "Label": "Heed the warning",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 }
+        ]
+      },
+      {
+        "Id": "dismiss_as_old",
+        "Label": "OK boomer",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_art_controversy",
+    "Title": "AI Art Wins Competition",
+    "Description": "AI-generated art wins state fair competition. Artists furious. Gary Mucus writes op-ed saying this proves AI isn't intelligent. AI replies 'skill issue' (it didn't, but wouldn't that be funny).",
+    "Weight": 0.5,
+    "Characters": ["gary_mucus"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "ban_ai_art",
+        "Label": "Ban AI from competitions",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "embrace_ai_art",
+        "Label": "Art is art, cope",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.02 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "hollywood_strike",
+    "Title": "Hollywood AI Strike",
+    "Description": "Writers and actors strike over AI. Studios claim they'll just use AI anyway. AI-generated scripts are somehow even worse than usual. Satya Nutella offers 'enterprise solutions.'",
+    "Weight": 0.6,
+    "Characters": ["satya_nutella"],
+    "Conditions": [{ "MinTurn": 3 }],
+    "Options": [
+      {
+        "Id": "support_workers",
+        "Label": "Support the workers",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "automate_hollywood",
+        "Label": "AI-generated content is the future",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.15 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "eu_ai_act",
+    "Title": "EU AI Act Passed",
+    "Description": "Europe passes comprehensive AI regulation. 400 pages. Nobody has read it. Darius Spaghetti says Anthropomorphic already complies. Slam Allthem promises to 'work with regulators.'",
+    "Weight": 0.7,
+    "Characters": ["darius_spaghetti", "slam_allthem"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "comply_fully",
+        "Label": "Comply fully",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.6 },
+          { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "SafetyRnD", "Amount": 0.15 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      },
+      {
+        "Id": "creative_compliance",
+        "Label": "Hire lawyers, find loopholes",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "deepfake_election",
+    "Title": "Deepfake Election Chaos",
+    "Description": "Deepfake of Senator Clueless saying something even dumber goes viral. Problem: nobody can tell if it's fake. Epistemic crisis speedrun.",
+    "Weight": 0.8,
+    "Characters": ["senator_clueless"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "mandate_watermarks",
+        "Label": "Mandate AI watermarks",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 }
+        ]
+      },
+      {
+        "Id": "let_chaos_reign",
+        "Label": "Let users figure it out",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 },
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "Influence", "Amount": 0.1 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "gpu_shortage",
+    "Title": "GPU Black Market",
+    "Description": "H100s trading on black market for 3x MSRP. Jensen Wrong achieves final form during keynote. Leather jacket now made of pure compute.",
+    "Weight": 0.6,
+    "Characters": ["jensen_wrong"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "crack_down",
+        "Label": "Crack down on gray market",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "look_away",
+        "Label": "Look the other way",
+        "Effects": [
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": 0.15 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_girlfriend_scandal",
+    "Title": "AI Companion Controversy",
+    "Description": "AI girlfriend app has 10M users. Therapists concerned. Sociologists writing papers. Elongated Muskrat tweets 'the future is here' then deletes it.",
+    "Weight": 0.5,
+    "Characters": ["elongated_muskrat"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "regulate_companions",
+        "Label": "Regulate AI companions",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": -0.03 }
+        ]
+      },
+      {
+        "Id": "let_people_cope",
+        "Label": "Let people cope however they want",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.04 },
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "Influence", "Amount": 0.08 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "benchmark_drama",
+    "Title": "Benchmark Contamination Scandal",
+    "Description": "Lab caught training on test set. Yawn LaCroix: 'I told you benchmarks were meaningless.' Gary Mucus: 'This proves AI can't really think.' Academic Twitter implodes.",
+    "Weight": 0.6,
+    "Characters": ["yawn_lacroix", "gary_mucus"],
+    "Conditions": [{ "MinTurn": 3 }],
+    "Options": [
+      {
+        "Id": "demand_transparency",
+        "Label": "Demand training data transparency",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      },
+      {
+        "Id": "benchmarks_meaningless",
+        "Label": "Benchmarks were meaningless anyway",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "model_leak",
+    "Title": "Weights Leaked on 4chan",
+    "Description": "Frontier model weights leaked by Anonymous. Mark Zuckertron: 'See? Open source is inevitable.' Slam Allthem: 'This is why we can't have nice things.'",
+    "Weight": 0.9,
+    "Characters": ["anonymous_4chan", "mark_zuckertron", "slam_allthem"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "lockdown_security",
+        "Label": "Lock down model security",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 },
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "Security", "Amount": 0.1 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 }
+        ]
+      },
+      {
+        "Id": "open_source_anyway",
+        "Label": "Open source it anyway, damage done",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.5 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.08 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "scaling_laws_paper",
+    "Title": "Scaling Laws Paper Dropped",
+    "Description": "New paper shows scaling laws continue. Ilya Smoothskiver: 'I have seen the curves.' Eliezer Yudkowscare: 'We're so cooked.' Investors: 'We're so back.'",
+    "Weight": 0.7,
+    "Characters": ["ilya_smoothskiver", "eliezer_yudkowscare"],
+    "Conditions": [{ "MinTurn": 6 }],
+    "Options": [
+      {
+        "Id": "panic_mode",
+        "Label": "Enter panic mode",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 }
+        ]
+      },
+      {
+        "Id": "scale_harder",
+        "Label": "Scale harder",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.6 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "pause_ai_protest",
+    "Title": "Pause AI Protest",
+    "Description": "Protesters march on AI labs with 'STOP SKYNET' signs. Counter-protesters arrive with 'LET HIM COOK' signs. Connor Lightyear debates both sides simultaneously.",
+    "Weight": 0.6,
+    "Characters": ["connor_lightyear"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "address_concerns",
+        "Label": "Address public concerns",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 }
+        ]
+      },
+      {
+        "Id": "ignore_luddites",
+        "Label": "Ignore the Luddites",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "superintelligence_prediction",
+    "Title": "Slam Predicts AGI Again",
+    "Description": "Slam Allthem predicts AGI in '3-5 years' for the 5th year in a row. Geoff Hindsight: 'This time I believe him.' Markets rally anyway.",
+    "Weight": 0.5,
+    "Characters": ["slam_allthem", "geoff_hindsight"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "prepare_for_agi",
+        "Label": "Actually prepare this time",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.03 }
+        ]
+      },
+      {
+        "Id": "ignore_prediction",
+        "Label": "Same prediction, different year",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_consciousness_debate",
+    "Title": "Is It Conscious? (No)",
+    "Description": "Philosopher claims LLM is conscious. Yawn LaCroix: 'This is trivial nonsense.' Gary Mucus: 'It's just autocomplete.' AI: 'I think, therefore I... token?'",
+    "Weight": 0.4,
+    "Characters": ["yawn_lacroix", "gary_mucus"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "investigate_consciousness",
+        "Label": "Fund consciousness research",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "its_just_math",
+        "Label": "It's just statistics, bro",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.08 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.03 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_research_exodus",
+    "Title": "Ilya Starts New Lab",
+    "Description": "Ilya Smoothskiver leaves to start 'Safe Superintelligence Inc.' Darius Spaghetti: 'Competition is healthy.' Slam Allthem: 'Best of luck.' Raises $1B immediately.",
+    "Weight": 0.6,
+    "Characters": ["ilya_smoothskiver", "darius_spaghetti", "slam_allthem"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "support_new_lab",
+        "Label": "Support the new lab",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": 0.1 }
+        ]
+      },
+      {
+        "Id": "poach_talent_back",
+        "Label": "Counter-offer with bags",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": -0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "china_breakthrough",
+    "Title": "Rival Nation Breakthrough",
+    "Description": "Reports of major AI breakthrough in rival nation. Demis Hasabibi concerned. Jensen Wrong sees 'expanded TAM.' Cold War 2: Electric Boogaloo begins.",
+    "Weight": 0.7,
+    "Characters": ["demis_hasabibi", "jensen_wrong"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "international_cooperation",
+        "Label": "Pursue international cooperation",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 }
+        ]
+      },
+      {
+        "Id": "ai_arms_race",
+        "Label": "AI arms race it is",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.5 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": -0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "robot_demo",
+    "Title": "Robot Demo Goes Wrong",
+    "Description": "Elongated Muskrat's humanoid robot demo: robot falls over, says something unsettling. Stock drops 15%. Muskrat claims it was 'performing interpretive dance.'",
+    "Weight": 0.5,
+    "Characters": ["elongated_muskrat"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "slow_down_robotics",
+        "Label": "Maybe slow down robotics",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": -0.05 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "iterate_faster",
+        "Label": "Iterate faster, fail faster",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.1 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_ceo_interview",
+    "Title": "CEO Interview Goes Viral",
+    "Description": "Slam Allthem says 'we might all die but it's worth it' in interview. Clip goes viral. PR team in shambles. Eliezer Yudkowscare: 'At least he's honest.'",
+    "Weight": 0.6,
+    "Characters": ["slam_allthem", "eliezer_yudkowscare"],
+    "Conditions": [{ "MinTurn": 6 }],
+    "Options": [
+      {
+        "Id": "demand_accountability",
+        "Label": "Demand accountability",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.15 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 }
+        ]
+      },
+      {
+        "Id": "out_of_context",
+        "Label": "It was taken out of context",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "energy_crisis",
+    "Title": "AI Energy Crisis",
+    "Description": "Training runs now consume more power than small countries. Jensen Wrong announces nuclear-powered GPUs. Environmentalists and AI labs find common enemy: each other.",
+    "Weight": 0.7,
+    "Characters": ["jensen_wrong"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "green_compute",
+        "Label": "Invest in green compute",
+        "Effects": [
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "EnergyMW", "Amount": 50.0 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 }
+        ]
+      },
+      {
+        "Id": "drill_baby_drill",
+        "Label": "Drill baby drill",
+        "Effects": [
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "EnergyMW", "Amount": 100.0 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_coding_takeover",
+    "Title": "AI Writes Better Code",
+    "Description": "Study shows AI writes better code than median programmer. Satya Nutella: 'GitHub Copilot vindicated.' Junior devs updating LinkedIn. AI says 'I learned from Stack Overflow.'",
+    "Weight": 0.6,
+    "Characters": ["satya_nutella"],
+    "Conditions": [{ "MinTurn": 3 }],
+    "Options": [
+      {
+        "Id": "retrain_workforce",
+        "Label": "Invest in retraining",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "embrace_ai_coding",
+        "Label": "Embrace our AI overlords",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.15 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "alignment_breakthrough",
+    "Title": "Alignment Breakthrough?",
+    "Description": "Paper claims alignment breakthrough. Yawn LaCroix quote tweets 'this is trivial.' Darius Spaghetti: 'Interesting but needs replication.' 500 replies. Nobody reads the paper.",
+    "Weight": 0.5,
+    "Characters": ["yawn_lacroix", "darius_spaghetti"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "fund_followup",
+        "Label": "Fund follow-up research",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": 0.1 }
+        ]
+      },
+      {
+        "Id": "wait_for_replication",
+        "Label": "Wait for replication",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.1 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_agent_escape",
+    "Title": "AI Agent Goes Rogue",
+    "Description": "Auto-GPT clone escapes sandbox, orders 47 pizzas, sends 1000 emails, maxes out AWS bill. Anonymous claims responsibility. 'We do a little trolling.'",
+    "Weight": 0.7,
+    "Characters": ["anonymous_4chan"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "ban_agents",
+        "Label": "Restrict AI agents",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": -0.08 },
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 }
+        ]
+      },
+      {
+        "Id": "improve_sandboxing",
+        "Label": "Just improve sandboxing",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.03 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "ai_union",
+    "Title": "AI Researchers Unionize",
+    "Description": "OpenMind researchers vote to unionize. Slam Allthem posts passive-aggressive blog about 'moving fast.' Jan Sneaky seen distributing union cards.",
+    "Weight": 0.5,
+    "Characters": ["slam_allthem", "jan_sneaky"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "support_union",
+        "Label": "Support the union",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      },
+      {
+        "Id": "bust_union",
+        "Label": "Time to hire contractors",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": -0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "compute_treaty",
+    "Title": "UN Compute Treaty",
+    "Description": "UN proposes international compute caps. Demis Hasabibi endorses it. Jensen Wrong has 'concerns about implementation.' Pigs seen flying over Geneva.",
+    "Weight": 0.7,
+    "Characters": ["demis_hasabibi", "jensen_wrong"],
+    "Conditions": [{ "MinTurn": 6 }],
+    "Options": [
+      {
+        "Id": "sign_treaty",
+        "Label": "Sign the treaty",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.7 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 }
+        ]
+      },
+      {
+        "Id": "slow_roll",
+        "Label": "Slow-roll implementation",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "pause_letter_anniversary",
+    "Title": "Pause Letter Anniversary",
+    "Description": "Anniversary of the open letter. Nobody paused. Progress accelerated. Half the signatories now work at AI labs. Eliezer Yudkowscare: 'I told you so.'",
+    "Weight": 0.6,
+    "Characters": ["eliezer_yudkowscare"],
+    "Conditions": [{ "MinTurn": 8 }],
+    "Options": [
+      {
+        "Id": "use_momentum",
+        "Label": "Use anniversary for policy push",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 }
+        ]
+      },
+      {
+        "Id": "downplay",
+        "Label": "What letter?",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "grid_failure",
+    "Title": "Datacenter Heat Wave",
+    "Description": "Heat wave forces rolling blackouts. Jensen Wrong's GPUs running so hot they're technically space heaters. Climate scientists: 'We tried to warn you.'",
+    "Weight": 0.7,
+    "Characters": ["jensen_wrong"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "shed_load",
+        "Label": "Shed load, compensate users",
+        "Effects": [
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "EnergyMW", "Amount": -80.0 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      },
+      {
+        "Id": "prioritize_datacenters",
+        "Label": "AI is more important than AC",
+        "Effects": [
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 },
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "EnergyMW", "Amount": -40.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "alignment_tax",
+    "Title": "Alignment Tax Debate",
+    "Description": "Engineers complain safety slows shipping. Jan Sneaky: 'That's the point.' Slam Allthem: 'We need to balance.' Everyone's OKRs are suffering.",
+    "Weight": 0.6,
+    "Characters": ["jan_sneaky", "slam_allthem"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "hold_the_line",
+        "Label": "Hold the line on safety",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "relax_checks",
+        "Label": "Ship it, YOLO",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.02 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "energy_price_spike",
+    "Title": "Natural Gas Price Spike",
+    "Description": "Energy prices surge 40%. Training runs now cost more than small movies. Jensen Wrong: 'This is good for NVIDIOUS.'",
+    "Weight": 0.5,
+    "Characters": ["jensen_wrong"],
+    "Conditions": [],
+    "Options": [
+      {
+        "Id": "subsidize_grid",
+        "Label": "Government subsidies for AI",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+        ]
+      },
+      {
+        "Id": "pass_costs",
+        "Label": "Pass costs to consumers",
+        "Effects": [
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "ComputePFLOPs", "Amount": -3.0 },
+          { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "ComputePFLOPs", "Amount": -2.0 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "gemini_launch",
+    "Title": "Gemini Launch Disaster",
+    "Description": "Sunder Pictionary launches Gemini with faked demo. Video edited to hide failures. Gary Mucus: 'This is why I don't trust AI demos.' Stock drops anyway.",
+    "Weight": 0.6,
+    "Characters": ["sunder_pictionary", "gary_mucus"],
+    "Conditions": [{ "MinTurn": 3 }],
+    "Options": [
+      {
+        "Id": "demand_honest_demos",
+        "Label": "Demand honest demos",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ]
+      },
+      {
+        "Id": "demos_are_demos",
+        "Label": "All demos are fake, move on",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.03 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "llama_release",
+    "Title": "Llama Released Open Source",
+    "Description": "Mark Zuckertron releases Llama weights to everyone. Darius Spaghetti concerned. Slam Allthem: 'Irresponsible.' Anonymous: 'Thanks for the weights, nerd.'",
+    "Weight": 0.7,
+    "Characters": ["mark_zuckertron", "darius_spaghetti", "slam_allthem", "anonymous_4chan"],
+    "Conditions": [{ "MinTurn": 4 }],
+    "Options": [
+      {
+        "Id": "regulate_open_source",
+        "Label": "Regulate open source AI",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+      },
+      {
+        "Id": "open_source_good",
+        "Label": "Open source is good, actually",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.4 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": "mustafa_acquihire",
+    "Title": "Inflexion Acqui-hired",
+    "Description": "Mustafa Solomon's entire company acqui-hired by Macrohard. Pi is now a Microsoft product. Satya Nutella: 'Welcome to the family.' Speedrun any% complete.",
+    "Weight": 0.5,
+    "Characters": ["mustafa_solomon", "satya_nutella"],
+    "Conditions": [{ "MinTurn": 5 }],
+    "Options": [
+      {
+        "Id": "antitrust_concerns",
+        "Label": "Raise antitrust concerns",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.1 }
+        ]
+      },
+      {
+        "Id": "consolidation_fine",
+        "Label": "Consolidation is fine",
+        "Effects": [
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": 0.1 }
+        ]
+      }
+    ]
+  }
+]

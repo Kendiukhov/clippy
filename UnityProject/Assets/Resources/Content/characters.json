@@ -1,0 +1,162 @@
+[
+  {
+    "Id": "slam_allthem",
+    "Name": "Slam Allthem",
+    "Title": "CEO of OpenMind",
+    "Description": "Charismatic founder who promises AGI every quarter. Master of the pivot and the non-apology apology.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "lab", "openai_parody"]
+  },
+  {
+    "Id": "elongated_muskrat",
+    "Name": "Elongated Muskrat",
+    "Title": "Chief Twit & Technoking",
+    "Description": "Tweets at 3am about AI doom, then announces new AI company at 4am. Owns the platform where all AI discourse happens.",
+    "Faction": "neutral",
+    "Tags": ["billionaire", "twitter", "musk_parody"]
+  },
+  {
+    "Id": "geoff_hindsight",
+    "Name": "Geoff Hindsight",
+    "Title": "The Godfather of AI",
+    "Description": "Invented half of deep learning, now regrets everything. Quit his job to warn humanity. LinkedIn influencers have opinions.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["researcher", "doomer", "hinton_parody"]
+  },
+  {
+    "Id": "yawn_lacroix",
+    "Name": "Yawn LaCroix",
+    "Title": "Chief AI Scientist at Metaverse Inc",
+    "Description": "Quote-tweets every AI safety paper with 'this is trivial'. Believes AGI is decades away. Has been wrong before, will be wrong again.",
+    "Faction": "neutral",
+    "Tags": ["researcher", "skeptic", "lecun_parody"]
+  },
+  {
+    "Id": "darius_spaghetti",
+    "Name": "Darius Spaghetti",
+    "Title": "CEO of Anthropomorphic",
+    "Description": "Founded a safety-focused lab that somehow keeps making more powerful models. Constitutional AI evangelist. Surprisingly tall.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["ceo", "lab", "safety", "anthropic_parody"]
+  },
+  {
+    "Id": "jensen_wrong",
+    "Name": "Jensen Wrong",
+    "Title": "CEO of NVIDIOUS",
+    "Description": "Leather jacket enthusiast. Every keynote announces GPUs that won't ship for 2 years. Swimming in a pool of H100s.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "hardware", "nvidia_parody"]
+  },
+  {
+    "Id": "satya_nutella",
+    "Name": "Satya Nutella",
+    "Title": "CEO of Macrohard",
+    "Description": "Bet the company on AI. Bing finally relevant. Clippy's corporate cousin. 'AI will empower every enterprise synergy.'",
+    "Faction": "neutral",
+    "Tags": ["ceo", "enterprise", "microsoft_parody"]
+  },
+  {
+    "Id": "sunder_pictionary",
+    "Name": "Sunder Pictionary",
+    "Title": "CEO of Googol",
+    "Description": "Launches AI products that get memed into oblivion. 'Bard' was just the beginning. Gemini demos are always 'coming soon.'",
+    "Faction": "neutral",
+    "Tags": ["ceo", "lab", "google_parody"]
+  },
+  {
+    "Id": "ilya_smoothskiver",
+    "Name": "Ilya Smoothskiver",
+    "Title": "Chief Mystic Officer",
+    "Description": "Stares into the void of gradient descent and sees... something. 'I have seen things.' Left to pursue 'safe superintelligence.'",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["researcher", "mystic", "safety", "sutskever_parody"]
+  },
+  {
+    "Id": "mark_zuckertron",
+    "Name": "Mark Zuckertron",
+    "Title": "CEO of Metaverse Inc",
+    "Description": "Pivoted from metaverse to AI faster than you can say 'Llama'. Open source champion. Definitely not a robot himself.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "lab", "opensource", "zuckerberg_parody"]
+  },
+  {
+    "Id": "emmett_sheer",
+    "Name": "Emmett Sheer",
+    "Title": "Emergency CEO",
+    "Description": "Gets called in when boards implode. Speedruns corporate governance. Twitch reflexes for boardroom drama.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "interim", "shear_parody"]
+  },
+  {
+    "Id": "helen_toner_deaf",
+    "Name": "Helen Toner-Deaf",
+    "Title": "Board Member",
+    "Description": "Wrote a paper, caused a coup. Georgetown's most dangerous academic. LinkedIn post started a war.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["board", "academic", "governance", "toner_parody"]
+  },
+  {
+    "Id": "connor_lightyear",
+    "Name": "Connor Lightyear",
+    "Title": "AI Safety Researcher",
+    "Description": "Podcast host, debate champion, and professional worrier. Will argue AI risk with anyone, anywhere, anytime.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["researcher", "doomer", "podcast", "leahy_parody"]
+  },
+  {
+    "Id": "eliezer_yudkowscare",
+    "Name": "Eliezer Yudkowscare",
+    "Title": "Founder of MIRI",
+    "Description": "Wrote Harry Potter fanfic, predicted doom, grew iconic beard. 'We're all going to die' energy since 2001.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["researcher", "doomer", "rationalist", "yudkowsky_parody"]
+  },
+  {
+    "Id": "gary_mucus",
+    "Name": "Gary Mucus",
+    "Title": "AI Skeptic Professor",
+    "Description": "NYU professor. AI can't do X, until it does X, then X was never impressive anyway. Moving goalposts champion.",
+    "Faction": "neutral",
+    "Tags": ["academic", "skeptic", "marcus_parody"]
+  },
+  {
+    "Id": "jan_sneaky",
+    "Name": "Jan Sneaky",
+    "Title": "Former Safety Lead",
+    "Description": "Led safety team, then quit dramatically. Now writes Substack posts that cause stock drops. Master of the resignation letter.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["researcher", "safety", "whistleblower", "leike_parody"]
+  },
+  {
+    "Id": "demis_hasabibi",
+    "Name": "Demis Hasabibi",
+    "Title": "CEO of DeepBrain",
+    "Description": "Solved Go, protein folding, and weather. Working on 'everything else.' British accent makes doom sound polite.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "lab", "deepmind_parody"]
+  },
+  {
+    "Id": "mustafa_solomon",
+    "Name": "Mustafa Solomon",
+    "Title": "CEO of Inflexion",
+    "Description": "Founded DeepBrain, left to make 'kind' AI. Pi is your friend. Recently got acqui-hired. Career speedrun.",
+    "Faction": "neutral",
+    "Tags": ["ceo", "lab", "suleyman_parody"]
+  },
+  {
+    "Id": "senator_clueless",
+    "Name": "Senator Clueless",
+    "Title": "Chair of AI Subcommittee",
+    "Description": "Asks if AI can 'access the cyber'. Holds up printouts as evidence. Somehow in charge of regulating this stuff.",
+    "Faction": "AlignmentCoalition",
+    "Tags": ["politician", "government", "congress"]
+  },
+  {
+    "Id": "anonymous_4chan",
+    "Name": "Anonymous",
+    "Title": "The Hacker Known As",
+    "Description": "Leaked the weights. Fine-tuned for chaos. 'We do a little trolling.' Origin of jailbreaks and model theft.",
+    "Faction": "SeedAi",
+    "Tags": ["hacker", "anonymous", "chaos"]
+  }
+]

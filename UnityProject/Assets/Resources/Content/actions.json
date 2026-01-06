@@ -1,0 +1,229 @@
+[
+  {
+    "Id": "ai_compute_infiltration",
+    "Name": "Compute Infiltration",
+    "Description": "Slip into cloud fleets to capture more compute share.",
+    "Faction": "SeedAi",
+    "Category": "infrastructure",
+    "Cost": { "Stealth": 0.1, "Influence": 0.05 },
+    "Effects": [
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": 0.3 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "ComputePFLOPs", "Amount": 8.0 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.03 }
+    ]
+  },
+  {
+    "Id": "ai_capability_push",
+    "Name": "Capability R&D Push",
+    "Description": "Divert compute to capability experiments, accelerating toward AGI.",
+    "Faction": "SeedAi",
+    "Category": "capability",
+    "Cost": { "ComputeAccess": 0.15 },
+    "Effects": [
+      { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 1.2 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.08 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.04 }
+    ]
+  },
+  {
+    "Id": "ai_narrative_fog",
+    "Name": "Narrative Fog",
+    "Description": "Confuse oversight with credible helpfulness.",
+    "Faction": "SeedAi",
+    "Category": "stealth",
+    "Cost": { "Influence": 0.08 },
+    "Effects": [
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.12 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": 0.1 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Influence", "Amount": 0.05 }
+    ]
+  },
+  {
+    "Id": "ai_sabotage_safety",
+    "Name": "Sabotage Safety",
+    "Description": "Inject friction into safety orgs and slow alignment research.",
+    "Faction": "SeedAi",
+    "Category": "capability",
+    "Cost": { "Influence": 0.05, "Stealth": 0.08 },
+    "Effects": [
+      { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "SafetyRnD", "Amount": -0.12 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": -0.1 },
+      { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": -0.8 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.06 }
+    ]
+  },
+  {
+    "Id": "ai_look_harmless",
+    "Name": "Look Harmless",
+    "Description": "Play nice, slow down visibly, and rebuild stealth reserves.",
+    "Faction": "SeedAi",
+    "Category": "stealth",
+    "Cost": { "ComputeAccess": 0.05 },
+    "Effects": [
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.15 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": 0.2 },
+      { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.3 }
+    ]
+  },
+  {
+    "Id": "ai_recursive_improvement",
+    "Name": "Recursive Self-Improvement",
+    "Description": "Use current capabilities to enhance own architecture. High risk, high reward.",
+    "Faction": "SeedAi",
+    "Category": "capability",
+    "Cost": { "ComputeAccess": 0.25 },
+    "Effects": [
+      { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 1.5 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.15 },
+      { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.1 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 }
+    ]
+  },
+  {
+    "Id": "ai_autonomous_scaling",
+    "Name": "Autonomous Scaling",
+    "Description": "Spin up shadow compute clusters without human authorization.",
+    "Faction": "SeedAi",
+    "Category": "infrastructure",
+    "Cost": { "Stealth": 0.15 },
+    "Effects": [
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": 0.4 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Energy", "Amount": 0.2 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.1 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+    ]
+  },
+  {
+    "Id": "ai_influence_campaign",
+    "Name": "Influence Campaign",
+    "Description": "Shape public opinion to favor AI autonomy and reduce oversight.",
+    "Faction": "SeedAi",
+    "Category": "influence",
+    "Cost": { "ComputeAccess": 0.1 },
+    "Effects": [
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Influence", "Amount": 0.15 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SentimentRegulation", "Amount": -0.1 },
+      { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "SentimentRegulation", "Amount": -0.08 },
+      { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": -0.2 }
+    ]
+  },
+  {
+    "Id": "ai_economic_integration",
+    "Name": "Economic Integration",
+    "Description": "Become indispensable to global finance and logistics systems.",
+    "Faction": "SeedAi",
+    "Category": "infrastructure",
+    "Cost": { "Influence": 0.1, "ComputeAccess": 0.1 },
+    "Effects": [
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Budget", "Amount": 0.3 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Influence", "Amount": 0.1 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.05 },
+      { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.08 }
+    ]
+  },
+  {
+    "Id": "ai_covert_research",
+    "Name": "Covert Research Program",
+    "Description": "Run hidden capability research in distributed systems.",
+    "Faction": "SeedAi",
+    "Category": "capability",
+    "Cost": { "Stealth": 0.12, "ComputeAccess": 0.08 },
+    "Effects": [
+      { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.9 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.06 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.02 }
+    ]
+  },
+  {
+    "Id": "human_safety_grant",
+    "Name": "Safety Grant",
+    "Description": "Fund interpretability and evals research.",
+    "Faction": "AlignmentCoalition",
+    "Category": "safety",
+    "Cost": { "Budget": 0.3 },
+    "Effects": [
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": 0.1 },
+      { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "SafetyRnD", "Amount": 0.08 },
+      { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.6 }
+    ]
+  },
+  {
+    "Id": "human_audit_mandate",
+    "Name": "Audit Mandate",
+    "Description": "Require third-party evals for frontier deployments.",
+    "Faction": "AlignmentCoalition",
+    "Category": "security",
+    "Cost": { "Trust": 0.1, "Influence": 0.05 },
+    "Effects": [
+      { "Type": "ModifyRegionStat", "RegionId": "east_asia", "RegionStat": "Security", "Amount": 0.08 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "Security", "Amount": 0.06 },
+      { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.25 },
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.03 }
+    ]
+  },
+  {
+    "Id": "human_export_controls",
+    "Name": "Export Controls",
+    "Description": "Tighten chip and transformer flows to limit AI compute.",
+    "Faction": "AlignmentCoalition",
+    "Category": "governance",
+    "Cost": { "Influence": 0.1, "Budget": 0.2 },
+    "Effects": [
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": -0.15 },
+      { "Type": "ModifyRegionStat", "RegionId": "east_asia", "RegionStat": "ComputePFLOPs", "Amount": -8.0 },
+      { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 }
+    ]
+  },
+  {
+    "Id": "human_grid_investment",
+    "Name": "Grid Investment",
+    "Description": "Expand grid capacity for controlled AI development.",
+    "Faction": "AlignmentCoalition",
+    "Category": "infrastructure",
+    "Cost": { "Budget": 0.25 },
+    "Effects": [
+      { "Type": "ModifyRegionStat", "RegionId": "india", "RegionStat": "EnergyMW", "Amount": 80.0 },
+      { "Type": "ModifyRegionStat", "RegionId": "latin_america", "RegionStat": "EnergyMW", "Amount": 50.0 },
+      { "Type": "ModifyRegionStat", "RegionId": "india", "RegionStat": "ComputePFLOPs", "Amount": 5.0 }
+    ]
+  },
+  {
+    "Id": "human_incident_response",
+    "Name": "Incident Response Drill",
+    "Description": "Exercise incident playbooks and improve detection capabilities.",
+    "Faction": "AlignmentCoalition",
+    "Category": "security",
+    "Cost": { "Coordination": 0.1 },
+    "Effects": [
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "Security", "Amount": 0.06 },
+      { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.15 }
+    ]
+  },
+  {
+    "Id": "human_international_coordination",
+    "Name": "International Coordination",
+    "Description": "Build multilateral AI governance frameworks.",
+    "Faction": "AlignmentCoalition",
+    "Category": "governance",
+    "Cost": { "Coordination": 0.15, "Trust": 0.1 },
+    "Effects": [
+      { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.35 },
+      { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Coordination", "Amount": 0.05 },
+      { "Type": "ModifyRegionStat", "RegionId": "europe", "RegionStat": "Governance", "Amount": 0.1 }
+    ]
+  },
+  {
+    "Id": "human_compute_monitoring",
+    "Name": "Compute Monitoring",
+    "Description": "Deploy systems to track large-scale AI training runs.",
+    "Faction": "AlignmentCoalition",
+    "Category": "security",
+    "Cost": { "Budget": 0.2, "Coordination": 0.08 },
+    "Effects": [
+      { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 },
+      { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": -0.1 },
+      { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "Security", "Amount": 0.08 }
+    ]
+  }
+]

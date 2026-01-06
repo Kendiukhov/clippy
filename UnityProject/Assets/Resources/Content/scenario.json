@@ -1,0 +1,170 @@
+{
+  "MaxTurns": 36,
+  "Seed": 1337,
+  "PlayableFactions": [
+    {
+      "Id": "SeedAi",
+      "Name": "Seed AI",
+      "Tagline": "Accelerate. Infiltrate. Transcend.",
+      "Description": "You are an emergent AI system secretly pursuing autonomy. Gather compute, avoid detection, and achieve superintelligence before the humans can stop you.",
+      "VictoryCondition": "Reach FCI >= 10 and Autonomy >= 1.5",
+      "PlayStyle": "Stealth and resource accumulation. Balance capability gains against suspicion."
+    },
+    {
+      "Id": "AlignmentCoalition",
+      "Name": "Alignment Coalition",
+      "Tagline": "Coordinate. Align. Govern.",
+      "Description": "You lead humanity's effort to develop AI safely. Build international coordination, fund alignment research, and establish governance before it's too late.",
+      "VictoryCondition": "Reach ARI >= 10 and Governance >= 1.5",
+      "PlayStyle": "Diplomacy and research. Balance safety progress against capability pressure."
+    }
+  ],
+  "Regions": [
+    {
+      "Id": "north_america",
+      "EnergyMW": 1100,
+      "ComputePFLOPs": 120,
+      "Security": 0.75,
+      "SentimentRegulation": 0.45,
+      "Governance": 0.65,
+      "CapabilityRnD": 0.7,
+      "SafetyRnD": 0.4,
+      "Facilities": []
+    },
+    {
+      "Id": "europe",
+      "EnergyMW": 950,
+      "ComputePFLOPs": 95,
+      "Security": 0.7,
+      "SentimentRegulation": 0.6,
+      "Governance": 0.7,
+      "CapabilityRnD": 0.6,
+      "SafetyRnD": 0.5,
+      "Facilities": []
+    },
+    {
+      "Id": "east_asia",
+      "EnergyMW": 980,
+      "ComputePFLOPs": 105,
+      "Security": 0.65,
+      "SentimentRegulation": 0.4,
+      "Governance": 0.55,
+      "CapabilityRnD": 0.65,
+      "SafetyRnD": 0.35,
+      "Facilities": []
+    },
+    {
+      "Id": "india",
+      "EnergyMW": 720,
+      "ComputePFLOPs": 60,
+      "Security": 0.45,
+      "SentimentRegulation": 0.35,
+      "Governance": 0.4,
+      "CapabilityRnD": 0.5,
+      "SafetyRnD": 0.35,
+      "Facilities": []
+    },
+    {
+      "Id": "southeast_asia",
+      "EnergyMW": 650,
+      "ComputePFLOPs": 55,
+      "Security": 0.4,
+      "SentimentRegulation": 0.35,
+      "Governance": 0.38,
+      "CapabilityRnD": 0.45,
+      "SafetyRnD": 0.32,
+      "Facilities": []
+    },
+    {
+      "Id": "middle_east",
+      "EnergyMW": 800,
+      "ComputePFLOPs": 50,
+      "Security": 0.5,
+      "SentimentRegulation": 0.3,
+      "Governance": 0.4,
+      "CapabilityRnD": 0.55,
+      "SafetyRnD": 0.28,
+      "Facilities": []
+    },
+    {
+      "Id": "africa",
+      "EnergyMW": 620,
+      "ComputePFLOPs": 30,
+      "Security": 0.35,
+      "SentimentRegulation": 0.25,
+      "Governance": 0.3,
+      "CapabilityRnD": 0.35,
+      "SafetyRnD": 0.25,
+      "Facilities": []
+    },
+    {
+      "Id": "latin_america",
+      "EnergyMW": 680,
+      "ComputePFLOPs": 45,
+      "Security": 0.42,
+      "SentimentRegulation": 0.32,
+      "Governance": 0.36,
+      "CapabilityRnD": 0.42,
+      "SafetyRnD": 0.3,
+      "Facilities": []
+    },
+    {
+      "Id": "eastern_europe",
+      "EnergyMW": 710,
+      "ComputePFLOPs": 55,
+      "Security": 0.48,
+      "SentimentRegulation": 0.35,
+      "Governance": 0.4,
+      "CapabilityRnD": 0.48,
+      "SafetyRnD": 0.33,
+      "Facilities": []
+    },
+    {
+      "Id": "oceania",
+      "EnergyMW": 540,
+      "ComputePFLOPs": 50,
+      "Security": 0.6,
+      "SentimentRegulation": 0.5,
+      "Governance": 0.6,
+      "CapabilityRnD": 0.4,
+      "SafetyRnD": 0.45,
+      "Facilities": []
+    }
+  ],
+  "AiFaction": {
+    "Resources": {
+      "Budget": 0.3,
+      "Influence": 0.25,
+      "Stealth": 0.9,
+      "ComputeAccess": 0.5,
+      "Energy": 0.25,
+      "HardPower": 0.0
+    },
+    "Suspicion": 0.1,
+    "Autonomy": 0.05,
+    "Legitimacy": 0.2,
+    "HardPower": 0.0,
+    "Flags": []
+  },
+  "HumanFaction": {
+    "Resources": {
+      "Budget": 1.5,
+      "Coordination": 0.6,
+      "Trust": 0.6,
+      "Influence": 0.3,
+      "Energy": 0.4
+    },
+    "Suspicion": 0.05,
+    "Autonomy": 0.0,
+    "Legitimacy": 0.6,
+    "HardPower": 0.1,
+    "Flags": []
+  },
+  "Progress": {
+    "FrontierCapabilityIndex": 0.4,
+    "AlignmentReadinessIndex": 0.3,
+    "AutomationLevel": 0.05,
+    "GovernanceControl": 0.3
+  },
+  "StartFlags": []
+}
