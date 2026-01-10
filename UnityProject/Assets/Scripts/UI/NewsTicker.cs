@@ -34,7 +34,8 @@ namespace Clippy.Unity.UI
         {
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.OnTurnEnded.AddListener(OnTurnEnded);
+                GameManager.Instance.OnGameStarted.AddListener(Clear);
+                GameManager.Instance.OnTurnResolved.AddListener(OnTurnResolved);
                 GameManager.Instance.OnEventTriggered.AddListener(OnEventTriggered);
             }
         }
@@ -43,18 +44,19 @@ namespace Clippy.Unity.UI
         {
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.OnTurnEnded.RemoveListener(OnTurnEnded);
+                GameManager.Instance.OnGameStarted.RemoveListener(Clear);
+                GameManager.Instance.OnTurnResolved.RemoveListener(OnTurnResolved);
                 GameManager.Instance.OnEventTriggered.RemoveListener(OnEventTriggered);
             }
         }
 
-        public void AddMessage(string message, NewsType type = NewsType.Normal)
+        public void AddMessage(string message, NewsType type = NewsType.Normal, int? turnOverride = null)
         {
             var entry = new NewsEntry
             {
                 Message = message,
                 Type = type,
-                Turn = GameManager.Instance?.CurrentTurn ?? 0
+                Turn = turnOverride ?? GameManager.Instance?.CurrentTurn ?? 0
             };
 
             _messages.Enqueue(entry);
@@ -68,10 +70,28 @@ namespace Clippy.Unity.UI
             RefreshDisplay();
         }
 
-        private void OnTurnEnded()
+        private void OnTurnResolved(TurnSummary summary)
         {
-            int turn = GameManager.Instance?.CurrentTurn ?? 0;
-            AddMessage($"[Turn {turn}] Turn completed.", NewsType.Normal);
+            if (summary == null) return;
+
+            foreach (var action in summary.Actions)
+            {
+                var faction = action.Faction == FactionKind.SeedAi ? "AI" : "Human";
+                var message = action.Applied
+                    ? $"{faction}: {action.ActionName}"
+                    : $"{faction}: {action.ActionName} (blocked)";
+                AddMessage(message, action.Applied ? NewsType.Action : NewsType.Warning, summary.Turn);
+            }
+
+            if (summary.Event != null)
+            {
+                AddMessage($"Event: {summary.Event.EventTitle} -> {summary.Event.OptionLabel}", NewsType.Event, summary.Turn);
+            }
+
+            if (summary.Outcome != GameOutcome.None)
+            {
+                AddMessage($"Outcome: {summary.Outcome} - {summary.OutcomeReason}", NewsType.Warning, summary.Turn);
+            }
         }
 
         private void OnEventTriggered(EventDefinition evt)

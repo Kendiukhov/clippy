@@ -29,6 +29,7 @@ namespace Clippy.Unity.UI
         [SerializeField] private TextMeshProUGUI _facilitiesText;
 
         private RegionState _currentRegion;
+        private string _currentRegionId;
 
         private void Awake()
         {
@@ -40,11 +41,28 @@ namespace Clippy.Unity.UI
             Hide();
         }
 
+        private void Start()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnWorldStateChanged.AddListener(UpdateFromWorld);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnWorldStateChanged.RemoveListener(UpdateFromWorld);
+            }
+        }
+
         public void Show(RegionState region)
         {
             if (region == null) return;
 
             _currentRegion = region;
+            _currentRegionId = region.Id;
             gameObject.SetActive(true);
 
             if (_canvasGroup != null)
@@ -60,6 +78,7 @@ namespace Clippy.Unity.UI
         public void Hide()
         {
             _currentRegion = null;
+            _currentRegionId = null;
 
             if (_canvasGroup != null)
             {
@@ -69,6 +88,21 @@ namespace Clippy.Unity.UI
             }
 
             gameObject.SetActive(false);
+        }
+
+        private void UpdateFromWorld()
+        {
+            if (string.IsNullOrEmpty(_currentRegionId)) return;
+
+            var region = GameManager.Instance?.GetRegion(_currentRegionId);
+            if (region == null)
+            {
+                Hide();
+                return;
+            }
+
+            _currentRegion = region;
+            UpdateDisplay();
         }
 
         private void UpdateDisplay()

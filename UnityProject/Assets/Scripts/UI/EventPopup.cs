@@ -119,11 +119,12 @@ namespace Clippy.Unity.UI
             if (_currentEvent == null || optionIndex < 0 || optionIndex >= _currentEvent.Options.Count)
                 return;
 
-            // For MVP, we just acknowledge the choice and hide
-            // The effects have already been applied by the simulation
-            Debug.Log($"[EventPopup] Option selected: {_currentEvent.Options[optionIndex].Label}");
-
-            Hide();
+            var summary = GameManager.Instance?.SubmitEventChoice(optionIndex);
+            if (summary != null)
+            {
+                Debug.Log($"[EventPopup] Option selected: {_currentEvent.Options[optionIndex].Label}");
+                Hide();
+            }
         }
 
         private System.Collections.IEnumerator FadeIn()

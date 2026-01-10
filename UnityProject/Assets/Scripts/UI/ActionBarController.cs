@@ -23,6 +23,10 @@ namespace Clippy.Unity.UI
         [SerializeField] private ResourceDisplay _influenceDisplay;
         [SerializeField] private ResourceDisplay _coordinationDisplay;
         [SerializeField] private ResourceDisplay _trustDisplay;
+        [SerializeField] private ResourceDisplay _stealthDisplay;
+        [SerializeField] private ResourceDisplay _computeDisplay;
+        [SerializeField] private ResourceDisplay _energyDisplay;
+        [SerializeField] private ResourceDisplay _hardPowerDisplay;
 
         private List<ActionCard> _actionCards = new List<ActionCard>();
         private ActionDefinition _selectedAction;
@@ -67,6 +71,7 @@ namespace Clippy.Unity.UI
 
             UpdateResourceDisplay();
             UpdateTurnCounter();
+            UpdateEndTurnState();
         }
 
         private void ClearActionCards()
@@ -99,11 +104,13 @@ namespace Clippy.Unity.UI
             }
 
             Debug.Log($"[ActionBar] Selected action: {action.Name}");
+            UpdateEndTurnState();
         }
 
         private void OnEndTurnClicked()
         {
             if (GameManager.Instance == null || !GameManager.Instance.IsGameActive) return;
+            if (GameManager.Instance.AwaitingEventChoice) return;
 
             // Execute turn with selected action
             string actionId = _selectedAction?.Id;
@@ -126,22 +133,71 @@ namespace Clippy.Unity.UI
             var factionState = GameManager.Instance?.PlayerFactionState;
             if (factionState == null) return;
 
-            UpdateResource(_budgetDisplay, "Budget", factionState.GetResource(ResourceType.Budget));
-            UpdateResource(_influenceDisplay, "Influence", factionState.GetResource(ResourceType.Influence));
-            UpdateResource(_coordinationDisplay, "Coordination", factionState.GetResource(ResourceType.Coordination));
-            UpdateResource(_trustDisplay, "Trust", factionState.GetResource(ResourceType.Trust));
+            var faction = GameManager.Instance.PlayerFaction;
+
+            if (faction == FactionKind.SeedAi)
+            {
+                UpdateResource(_stealthDisplay, "Stealth", factionState.GetResource(ResourceType.Stealth), true);
+                UpdateResource(_computeDisplay, "Compute", factionState.GetResource(ResourceType.ComputeAccess), true);
+                UpdateResource(_energyDisplay, "Energy", factionState.GetResource(ResourceType.Energy), true);
+                UpdateResource(_influenceDisplay, "Influence", factionState.GetResource(ResourceType.Influence), true);
+                UpdateResource(_budgetDisplay, "Budget", factionState.GetResource(ResourceType.Budget), _budgetDisplay != null);
+                UpdateResource(_coordinationDisplay, "Coordination", 0f, false);
+                UpdateResource(_trustDisplay, "Trust", 0f, false);
+                UpdateResource(_hardPowerDisplay, "Hard Power", factionState.GetResource(ResourceType.HardPower), _hardPowerDisplay != null);
+            }
+            else
+            {
+                UpdateResource(_budgetDisplay, "Budget", factionState.GetResource(ResourceType.Budget), true);
+                UpdateResource(_influenceDisplay, "Influence", factionState.GetResource(ResourceType.Influence), true);
+                UpdateResource(_coordinationDisplay, "Coordination", factionState.GetResource(ResourceType.Coordination), true);
+                UpdateResource(_trustDisplay, "Trust", factionState.GetResource(ResourceType.Trust), true);
+                UpdateResource(_stealthDisplay, "Stealth", 0f, false);
+                UpdateResource(_computeDisplay, "Compute", 0f, false);
+                UpdateResource(_energyDisplay, "Energy", 0f, false);
+                UpdateResource(_hardPowerDisplay, "Hard Power", 0f, false);
+            }
         }
 
-        private void UpdateResource(ResourceDisplay display, string label, float value)
+        private void UpdateResource(ResourceDisplay display, string label, float value, bool active)
         {
             if (display == null) return;
-            display.SetValue(label, value);
+            display.gameObject.SetActive(active);
+            if (active)
+            {
+                display.SetValue(label, value);
+            }
         }
 
         private void UpdateTurnCounter()
         {
             if (_turnCounterText == null) return;
             _turnCounterText.text = $"Turn {GameManager.Instance?.CurrentTurn ?? 0}";
+        }
+
+        private void UpdateEndTurnState()
+        {
+            if (_endTurnButton == null) return;
+
+            if (GameManager.Instance == null || !GameManager.Instance.IsGameActive)
+            {
+                _endTurnButton.interactable = false;
+                if (_endTurnText != null) _endTurnText.text = "End Turn";
+                return;
+            }
+
+            if (GameManager.Instance.AwaitingEventChoice)
+            {
+                _endTurnButton.interactable = false;
+                if (_endTurnText != null) _endTurnText.text = "Resolve Event";
+                return;
+            }
+
+            _endTurnButton.interactable = true;
+            if (_endTurnText != null)
+            {
+                _endTurnText.text = _selectedAction == null ? "End Turn (Pass)" : "End Turn";
+            }
         }
     }
 
