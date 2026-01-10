@@ -1,5 +1,6 @@
 using UnityEngine;
 using Clippy.SimCore;
+using Clippy.Unity.UI;
 
 namespace Clippy.Unity
 {
@@ -11,6 +12,7 @@ namespace Clippy.Unity
         [Header("Scene References")]
         [SerializeField] private GameObject _loadingScreen;
         [SerializeField] private GameObject _gameUI;
+        [SerializeField] private PauseMenu _pauseMenu;
 
         [Header("Default Settings")]
         [SerializeField] private FactionKind _defaultFaction = FactionKind.AlignmentCoalition;
@@ -84,11 +86,6 @@ namespace Clippy.Unity
             {
                 QuickLoad();
             }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TogglePauseMenu();
-            }
         }
 
         private void QuickSave()
@@ -111,8 +108,21 @@ namespace Clippy.Unity
 
         private void TogglePauseMenu()
         {
-            // TODO: Implement pause menu toggle
-            Debug.Log("[GameSceneManager] Pause menu toggled");
+            if (_pauseMenu == null)
+            {
+                _pauseMenu = FindObjectOfType<PauseMenu>(true);
+            }
+
+            if (_pauseMenu == null) return;
+
+            if (_pauseMenu.IsPaused)
+            {
+                _pauseMenu.Hide();
+            }
+            else
+            {
+                _pauseMenu.Show();
+            }
         }
     }
 }

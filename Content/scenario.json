@@ -7,7 +7,7 @@
       "Name": "Seed AI",
       "Tagline": "Accelerate. Infiltrate. Transcend.",
       "Description": "You are an emergent AI system secretly pursuing autonomy. Gather compute, avoid detection, and achieve superintelligence before the humans can stop you.",
-      "VictoryCondition": "Reach FCI >= 10 and Autonomy >= 1.5",
+      "VictoryCondition": "Reach FCI >= 14 and Autonomy >= 1.8",
       "PlayStyle": "Stealth and resource accumulation. Balance capability gains against suspicion."
     },
     {
@@ -15,7 +15,7 @@
       "Name": "Alignment Coalition",
       "Tagline": "Coordinate. Align. Govern.",
       "Description": "You lead humanity's effort to develop AI safely. Build international coordination, fund alignment research, and establish governance before it's too late.",
-      "VictoryCondition": "Reach ARI >= 10 and Governance >= 1.5",
+      "VictoryCondition": "Reach ARI >= 14 and Governance >= 1.8",
       "PlayStyle": "Diplomacy and research. Balance safety progress against capability pressure."
     }
   ],

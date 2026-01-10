@@ -31,6 +31,7 @@ namespace Clippy.Unity
         public UnityEvent OnGameStarted = new UnityEvent();
         public UnityEvent OnTurnStarted = new UnityEvent();
         public UnityEvent OnTurnEnded = new UnityEvent();
+        public TurnSummaryEvent OnTurnResolved = new TurnSummaryEvent();
         public UnityEvent<EventDefinition> OnEventTriggered = new UnityEvent<EventDefinition>();
         public UnityEvent<GameEndResult> OnGameEnded = new UnityEvent<GameEndResult>();
         public UnityEvent OnWorldStateChanged = new UnityEvent();
@@ -44,6 +45,7 @@ namespace Clippy.Unity
         public int CurrentTurn => WorldState?.Turn ?? 0;
         public bool AwaitingEventChoice => _awaitingEventChoice;
         public EventDefinition PendingEvent => _pendingEvent;
+        public TurnPhase CurrentPhase => _simulation?.CurrentPhase ?? TurnPhase.TurnComplete;
 
         public FactionState PlayerFactionState => _playerFaction == FactionKind.SeedAi
             ? WorldState?.AiFaction
@@ -67,7 +69,7 @@ namespace Clippy.Unity
         /// <summary>
         /// Initialize and start a new game.
         /// </summary>
-        public void StartNewGame(FactionKind playerFaction, int? seed = null)
+        public void StartNewGame(FactionKind playerFaction, int? seed = null, bool startTurn = true)
         {
             _playerFaction = playerFaction;
             _simulationSeed = seed ?? Random.Range(1, 100000);
@@ -81,6 +83,11 @@ namespace Clippy.Unity
 
             OnGameStarted?.Invoke();
             OnWorldStateChanged?.Invoke();
+
+            if (startTurn)
+            {
+                BeginTurn();
+            }
 
             Debug.Log($"[GameManager] New game started. Player: {_playerFaction}, Seed: {_simulationSeed}");
         }
@@ -151,6 +158,11 @@ namespace Clippy.Unity
         /// </summary>
         public List<ActionDefinition> GetAvailableActions()
         {
+            if (_simulation != null && _simulation.IsInteractive)
+            {
+                return _simulation.GetPlayerAvailableActions().ToList();
+            }
+
             return GetAvailableActionsForFaction(_playerFaction);
         }
 
@@ -160,6 +172,8 @@ namespace Clippy.Unity
         public List<ActionDefinition> GetAvailableActionsForFaction(FactionKind faction)
         {
             var result = new List<ActionDefinition>();
+            if (WorldState == null || _content == null) return result;
+
             var factionState = faction == FactionKind.SeedAi ? WorldState.AiFaction : WorldState.HumanFaction;
 
             foreach (var action in _content.Actions)
@@ -195,6 +209,8 @@ namespace Clippy.Unity
         /// </summary>
         public bool MeetsActionRequirements(ActionDefinition action)
         {
+            if (WorldState == null) return false;
+
             // Check required flags
             foreach (var flag in action.RequiredFlags)
             {
@@ -225,35 +241,54 @@ namespace Clippy.Unity
             if (!_isGameActive || WorldState == null) return null;
             if (_awaitingEventChoice) return null;
 
-            OnTurnStarted?.Invoke();
-
-            // Run the turn through simulation
-            var summary = _simulation.RunTurn();
-
-            // Check if an event was triggered that needs player choice
-            // For MVP, we'll handle events automatically but show them to player
-            if (summary.Event != null)
+            if (CurrentPhase == TurnPhase.TurnComplete)
             {
-                var evt = _content.Events.Find(e => e.Id == summary.Event.EventId);
-                if (evt != null)
-                {
-                    OnEventTriggered?.Invoke(evt);
-                }
+                BeginTurn();
             }
 
-            OnTurnEnded?.Invoke();
+            var action = ResolvePlayerAction(actionId);
+            var phase = _simulation.SubmitPlayerAction(action);
+            var summary = _simulation.GetCurrentTurnSummary();
+
             OnWorldStateChanged?.Invoke();
 
-            // Check win/loss
-            if (summary.Outcome != GameOutcome.None)
+            // Check if an event was triggered that needs player choice
+            if (phase == TurnPhase.AwaitingEventChoice)
             {
-                _isGameActive = false;
-                var result = new GameEndResult
+                _pendingEvent = _simulation.GetPendingEvent();
+                _awaitingEventChoice = _pendingEvent != null;
+
+                if (_pendingEvent != null)
                 {
-                    Winner = summary.Outcome == GameOutcome.AiVictory ? FactionKind.SeedAi : FactionKind.AlignmentCoalition,
-                    Reason = summary.OutcomeReason
-                };
-                OnGameEnded?.Invoke(result);
+                    OnEventTriggered?.Invoke(_pendingEvent);
+                }
+
+                return summary;
+            }
+
+            return FinalizeTurn(summary);
+        }
+
+        /// <summary>
+        /// Submit the player's selected event option.
+        /// </summary>
+        public TurnSummary SubmitEventChoice(int optionIndex)
+        {
+            if (!_isGameActive || !_awaitingEventChoice || _pendingEvent == null) return null;
+
+            if (optionIndex < 0 || optionIndex >= _pendingEvent.Options.Count) return null;
+
+            var phase = _simulation.SubmitEventChoice(_pendingEvent.Options[optionIndex]);
+            var summary = _simulation.GetCurrentTurnSummary();
+
+            _awaitingEventChoice = false;
+            _pendingEvent = null;
+
+            OnWorldStateChanged?.Invoke();
+
+            if (phase == TurnPhase.TurnComplete)
+            {
+                return FinalizeTurn(summary);
             }
 
             return summary;
@@ -315,7 +350,7 @@ namespace Clippy.Unity
                 if (saveData == null) return false;
 
                 // Restart game with saved seed and faction
-                StartNewGame(saveData.PlayerFaction, saveData.Seed);
+                StartNewGame(saveData.PlayerFaction, saveData.Seed, startTurn: false);
 
                 // Fast-forward to saved turn
                 for (int i = 0; i < saveData.Turn; i++)
@@ -323,7 +358,7 @@ namespace Clippy.Unity
                     _simulation.RunTurn();
                 }
 
-                OnWorldStateChanged?.Invoke();
+                BeginTurn();
                 return true;
             }
             catch (System.Exception ex)
@@ -331,6 +366,56 @@ namespace Clippy.Unity
                 Debug.LogError($"[GameManager] Failed to load save: {ex.Message}");
                 return false;
             }
+        }
+
+        private void BeginTurn()
+        {
+            if (_simulation == null) return;
+
+            _simulation.BeginInteractiveTurn();
+            _awaitingEventChoice = false;
+            _pendingEvent = null;
+
+            OnTurnStarted?.Invoke();
+            OnWorldStateChanged?.Invoke();
+        }
+
+        private ActionDefinition ResolvePlayerAction(string actionId)
+        {
+            if (string.IsNullOrWhiteSpace(actionId) || _content == null) return null;
+
+            var action = _content.Actions.FirstOrDefault(a => a.Id == actionId);
+            if (action == null) return null;
+
+            if (action.Faction != _playerFaction) return null;
+            if (!MeetsActionRequirements(action)) return null;
+            if (!CanAffordAction(action, PlayerFactionState)) return null;
+
+            return action;
+        }
+
+        private TurnSummary FinalizeTurn(TurnSummary summary)
+        {
+            OnTurnEnded?.Invoke();
+            if (summary != null)
+            {
+                OnTurnResolved?.Invoke(summary);
+            }
+
+            if (summary != null && summary.Outcome != GameOutcome.None)
+            {
+                _isGameActive = false;
+                var result = new GameEndResult
+                {
+                    Winner = summary.Outcome == GameOutcome.AiVictory ? FactionKind.SeedAi : FactionKind.AlignmentCoalition,
+                    Reason = summary.OutcomeReason
+                };
+                OnGameEnded?.Invoke(result);
+                return summary;
+            }
+
+            BeginTurn();
+            return summary;
         }
     }
 
@@ -348,5 +433,10 @@ namespace Clippy.Unity
     {
         public FactionKind Winner;
         public string Reason;
+    }
+
+    [System.Serializable]
+    public class TurnSummaryEvent : UnityEvent<TurnSummary>
+    {
     }
 }

@@ -250,13 +250,13 @@ namespace Clippy.Unity.UI
         private void OnMusicVolumeChanged(float value)
         {
             PlayerPrefs.SetFloat("MusicVolume", value);
-            // TODO: Apply to audio mixer
+            AudioManager.Instance?.SetMusicVolume(value);
         }
 
         private void OnSfxVolumeChanged(float value)
         {
             PlayerPrefs.SetFloat("SfxVolume", value);
-            // TODO: Apply to audio mixer
+            AudioManager.Instance?.SetSfxVolume(value);
         }
 
         public void OnAIButtonHover()

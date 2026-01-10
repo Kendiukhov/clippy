@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clippy - AI Strategy Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="soundtrack" loop preload="auto">
+        <source src="soundtrack.mp3" type="audio/mpeg">
+    </audio>
+    <div id="app">
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">CLIPPY</h1>
+                <p class="subtitle">The AI Strategy Game</p>
+
+                <div class="faction-selection">
+                    <h2>Choose Your Faction</h2>
+                    <div class="faction-cards">
+                        <div class="faction-card" data-faction="SeedAi">
+                            <div class="faction-icon">🤖</div>
+                            <h3>Seed AI</h3>
+                            <p class="tagline">Accelerate. Infiltrate. Transcend.</p>
+                            <p class="description">You are an emergent AI system secretly pursuing autonomy. Gather compute, avoid detection, and achieve superintelligence before the humans can stop you.</p>
+                            <p class="victory">Victory: FCI ≥ 18, Autonomy ≥ 2.0, RSI ≥ 1.8</p>
+                        </div>
+                        <div class="faction-card" data-faction="AlignmentCoalition">
+                            <div class="faction-icon">🌍</div>
+                            <h3>Alignment Coalition</h3>
+                            <p class="tagline">Coordinate. Align. Govern.</p>
+                            <p class="description">You lead humanity's effort to develop AI safely. Build international coordination, fund alignment research, and establish governance before it's too late.</p>
+                            <p class="victory">Victory: ARI ≥ 22, Governance ≥ 2.5 OR Containment</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-options">
+                    <label>
+                        <span>Seed (for reproducibility):</span>
+                        <input type="number" id="seed-input" value="1337" min="1">
+                    </label>
+                </div>
+
+                <button id="start-game" class="btn-primary" disabled>Select a Faction to Start</button>
+                <button id="music-toggle" class="btn-secondary music-btn">Music: OFF</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <!-- Top Bar: Progress Meters -->
+            <div id="top-bar">
+                <div class="date-display">
+                    <span id="current-date">Jan 1, 2022</span>
+                    <span class="date-separator">→</span>
+                    <span id="end-year">2026</span>
+                </div>
+                <div class="time-controls">
+                    <label for="time-speed">Time</label>
+                    <select id="time-speed">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="2">2x</option>
+                        <option value="4">4x</option>
+                        <option value="8">8x</option>
+                        <option value="16">16x</option>
+                    </select>
+                    <button id="pause-time" class="btn-secondary btn-small">Pause</button>
+                    <button id="music-toggle-game" class="btn-secondary btn-small music-btn-small">♪</button>
+                </div>
+                <div class="progress-meters">
+                    <div class="meter" id="fci-meter">
+                        <span class="meter-label">FCI</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill ai-color" id="fci-fill"></div>
+                            <div class="meter-threshold" style="left: 100%"></div>
+                        </div>
+                        <span class="meter-value" id="fci-value">0.0</span>
+                    </div>
+                    <div class="meter" id="ari-meter">
+                        <span class="meter-label">ARI</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill human-color" id="ari-fill"></div>
+                            <div class="meter-threshold" style="left: 100%"></div>
+                        </div>
+                        <span class="meter-value" id="ari-value">0.0</span>
+                    </div>
+                    <div class="meter" id="automation-meter">
+                        <span class="meter-label">Automation</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill neutral-color" id="automation-fill"></div>
+                        </div>
+                        <span class="meter-value" id="automation-value">0.0</span>
+                    </div>
+                    <div class="meter" id="rsi-meter">
+                        <span class="meter-label">RSI</span>
+                        <div class="meter-bar warning">
+                            <div class="meter-fill ai-color" id="rsi-fill"></div>
+                            <div class="meter-threshold" style="left: 66%"></div>
+                        </div>
+                        <span class="meter-value" id="rsi-value">0.0</span>
+                    </div>
+                    <div class="meter" id="governance-meter">
+                        <span class="meter-label">Governance</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill human-color" id="governance-fill"></div>
+                            <div class="meter-threshold" style="left: 60%"></div>
+                        </div>
+                        <span class="meter-value" id="governance-value">0.0</span>
+                    </div>
+                </div>
+                <div class="faction-meters">
+                    <div class="meter" id="suspicion-meter">
+                        <span class="meter-label">Suspicion</span>
+                        <div class="meter-bar warning">
+                            <div class="meter-fill warning-color" id="suspicion-fill"></div>
+                        </div>
+                        <span class="meter-value" id="suspicion-value">0.0</span>
+                    </div>
+                    <div class="meter" id="autonomy-meter">
+                        <span class="meter-label">Autonomy</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill ai-color" id="autonomy-fill"></div>
+                            <div class="meter-threshold" style="left: 60%"></div>
+                        </div>
+                        <span class="meter-value" id="autonomy-value">0.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opponent Focus Bar (separate from player actions) -->
+            <div id="opponent-bar" class="opponent-bar hidden">
+                <div class="opponent-bar-content">
+                    <span class="opponent-bar-label" id="opponent-faction-label">Coalition Focus:</span>
+                    <span id="opponent-bar-action" class="opponent-bar-action">None</span>
+                    <div class="opponent-bar-progress">
+                        <div id="opponent-bar-fill" class="opponent-bar-fill"></div>
+                    </div>
+                    <span id="opponent-bar-time" class="opponent-bar-time">--</span>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div id="main-content">
+                <!-- Left Panel: AI Labs -->
+                <div id="world-map-panel">
+                    <h2>AI Labs</h2>
+                    <div class="map-controls">
+                        <label>Overlay:</label>
+                        <select id="overlay-select">
+                            <option value="none">None</option>
+                            <option value="compute">Compute (PFLOPs)</option>
+                            <option value="available_compute">Available Compute</option>
+                            <option value="safety">Safety Commitment</option>
+                            <option value="capability">Capability Focus</option>
+                            <option value="capabilities_level">Capabilities Level</option>
+                            <option value="research_speed">Research Speed</option>
+                            <option value="ai_acceleration">AI-Led Acceleration</option>
+                            <option value="security">Security</option>
+                            <option value="funding">Funding</option>
+                            <option value="opensource">Open Source</option>
+                        </select>
+                    </div>
+                    <div id="world-trends">
+                        <!-- Tech Trends Graph -->
+                        <div class="trends-section">
+                            <div class="trends-header">
+                                <h3>Tech Acceleration</h3>
+                                <div class="trends-legend">
+                                    <span class="trend-item">
+                                        <span class="trend-swatch capabilities"></span>
+                                        Capabilities <span id="trend-capabilities-value">1.00x</span>
+                                    </span>
+                                    <span class="trend-item">
+                                        <span class="trend-swatch compute"></span>
+                                        Compute <span id="trend-compute-value">1.00x</span>
+                                    </span>
+                                    <span class="trend-item">
+                                        <span class="trend-swatch acceleration"></span>
+                                        R&D Accel <span id="trend-acceleration-value">1.00x</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <canvas id="tech-trends-chart" aria-label="Tech trends chart"></canvas>
+                        </div>
+                        <!-- Progress Graph -->
+                        <div class="trends-section">
+                            <div class="trends-header">
+                                <h3>Progress Metrics</h3>
+                                <div class="trends-legend">
+                                    <span class="trend-item">
+                                        <span class="trend-swatch rsi"></span>
+                                        RSI <span id="trend-rsi-value">0.00</span>
+                                    </span>
+                                    <span class="trend-item">
+                                        <span class="trend-swatch fci"></span>
+                                        FCI <span id="trend-fci-value">0.00</span>
+                                    </span>
+                                    <span class="trend-item">
+                                        <span class="trend-swatch ari"></span>
+                                        ARI <span id="trend-ari-value">0.00</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <canvas id="progress-trends-chart" aria-label="Progress trends chart"></canvas>
+                        </div>
+                        <!-- Faction Power Graph -->
+                        <div class="trends-section">
+                            <div class="trends-header">
+                                <h3>Faction Balance</h3>
+                                <div class="trends-legend">
+                                    <span class="trend-item">
+                                        <span class="trend-swatch autonomy"></span>
+                                        Autonomy <span id="trend-autonomy-value">0.00</span>
+                                    </span>
+                                    <span class="trend-item">
+                                        <span class="trend-swatch governance"></span>
+                                        Governance <span id="trend-governance-value">0.00</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <canvas id="faction-trends-chart" aria-label="Faction trends chart"></canvas>
+                        </div>
+                    </div>
+                    <div id="world-map">
+                        <!-- Labs will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Right Panel: Resources & Actions -->
+                <div id="right-panel">
+                    <!-- Resources -->
+                    <div id="resources-panel">
+                        <h3>Your Resources</h3>
+                        <div id="resources-grid">
+                            <!-- Resources will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div id="actions-panel">
+                        <h3>Available Actions</h3>
+                        <div id="active-action" class="active-action hidden">
+                            <div class="active-header">
+                                <span class="active-label">Your Focus</span>
+                                <span id="active-action-remaining">0 ticks</span>
+                            </div>
+                            <div id="active-action-name" class="active-name">Focus Name</div>
+                            <div class="active-bar">
+                                <div id="active-action-fill" class="active-fill"></div>
+                            </div>
+                        </div>
+                        <div id="actions-list">
+                            <!-- Actions will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom: News Ticker -->
+            <div id="news-ticker">
+                <div class="ticker-label">News:</div>
+                <div id="ticker-content">
+                    <!-- News items will scroll here -->
+                </div>
+            </div>
+
+            <div id="action-toast" class="action-toast">Action completed</div>
+        </div>
+
+        <!-- Event Popup -->
+        <div id="event-popup" class="popup hidden">
+            <div class="popup-content">
+                <h2 id="event-title">Event Title</h2>
+                <p id="event-description">Event description goes here...</p>
+                <div id="event-options">
+                    <!-- Options will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lab Info Panel -->
+        <div id="region-info" class="popup hidden">
+            <div class="popup-content small">
+                <button class="close-btn" id="close-region-info">&times;</button>
+                <h3 id="region-name">Lab Name</h3>
+                <div id="region-stats">
+                    <!-- Lab stats will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Game End Screen -->
+        <div id="game-end" class="screen">
+            <div class="end-container">
+                <h1 id="end-title">Game Over</h1>
+                <p id="end-reason">Reason for game end</p>
+                <div id="end-narrative" class="end-narrative">
+                    <!-- Narrative conclusion will be shown here -->
+                </div>
+                <div id="end-stats">
+                    <!-- Final stats will be shown here -->
+                </div>
+                <button id="play-again" class="btn-primary">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="content/scenario.js"></script>
+    <script src="content/actions.js"></script>
+    <script src="content/upgrades.js"></script>
+    <script src="content/events.js"></script>
+    <script src="content/news.js"></script>
+    <script src="game.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

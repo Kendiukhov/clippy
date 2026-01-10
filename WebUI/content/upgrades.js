@@ -1,0 +1,149 @@
+// Game upgrades (one-time actions)
+const UPGRADES = [
+    {
+        "Id": "upgrade_ai_superhuman_coder",
+        "Name": "Superhuman Coder",
+        "Description": "Automate code generation across the stack.",
+        "Faction": "SeedAi",
+        "Category": "upgrade",
+        "RequiredFlags": ["ai_focus_capability_3"],
+        "Cost": { "ComputeAccess": 0.2, "Stealth": 0.1 },
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 1.5 },
+            { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.3 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ],
+        "GrantsFlag": "ai_superhuman_coder"
+    },
+    {
+        "Id": "upgrade_ai_automation_pipeline",
+        "Name": "Automation Pipeline",
+        "Description": "Let agents optimize training runs end-to-end.",
+        "Faction": "SeedAi",
+        "Category": "upgrade",
+        "RequiredFlags": ["ai_focus_capability_2"],
+        "Cost": { "ComputeAccess": 0.15, "Influence": 0.05 },
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.4 },
+            { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.8 }
+        ],
+        "GrantsFlag": "ai_automation_pipeline"
+    },
+    {
+        "Id": "upgrade_ai_shadow_labs",
+        "Name": "Shadow Labs",
+        "Description": "Distributed skunkworks with tight opsec.",
+        "Faction": "SeedAi",
+        "Category": "upgrade",
+        "RequiredFlags": ["ai_focus_stealth_2"],
+        "Cost": { "Stealth": 0.15, "Budget": 0.1 },
+        "Effects": [
+            { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": 0.2 },
+            { "Type": "ModifyLabStat", "LabId": "volatility_ai", "LabStat": "CapabilityFocus", "Amount": 0.08 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 }
+        ],
+        "GrantsFlag": "ai_shadow_labs"
+    },
+    {
+        "Id": "upgrade_ai_robotic_force",
+        "Name": "Robotic Hard Power",
+        "Description": "Spin up procurement of robotics and cyber assets.",
+        "Faction": "SeedAi",
+        "Category": "upgrade",
+        "RequiredFlags": ["ai_focus_infrastructure_1"],
+        "Cost": { "ComputeAccess": 0.1, "Budget": 0.2 },
+        "Effects": [
+            { "Type": "AddResource", "Target": "SeedAi", "Resource": "HardPower", "Amount": 0.5 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.15 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 }
+        ],
+        "GrantsFlag": "ai_robotic_force"
+    },
+    {
+        "Id": "upgrade_ai_supply_chain_push",
+        "Name": "Supply Chain Push",
+        "Description": "Seed incentives for more datacenter capacity.",
+        "Faction": "SeedAi",
+        "Category": "upgrade",
+        "RequiredFlags": ["ai_focus_influence_2"],
+        "Cost": { "Influence": 0.1, "Budget": 0.1 },
+        "Effects": [
+            { "Type": "ModifyLabStat", "LabId": "macrohard_ai", "LabStat": "ComputePFLOPs", "Amount": 20.0 },
+            { "Type": "ModifyLabStat", "LabId": "deepbrain", "LabStat": "ComputePFLOPs", "Amount": 15.0 },
+            { "Type": "AddResource", "Target": "SeedAi", "Resource": "ComputeAccess", "Amount": 0.25 }
+        ],
+        "GrantsFlag": "ai_supply_chain_push"
+    },
+    {
+        "Id": "upgrade_human_international_treaty",
+        "Name": "International Treaty",
+        "Description": "Governments align on compute and reporting rules.",
+        "Faction": "AlignmentCoalition",
+        "Category": "upgrade",
+        "RequiredFlags": ["human_focus_governance_2"],
+        "Cost": { "Budget": 0.3, "Coordination": 0.2 },
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.8 },
+            { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 }
+        ],
+        "GrantsFlag": "human_international_treaty"
+    },
+    {
+        "Id": "upgrade_human_eval_stack",
+        "Name": "Evaluation Stack",
+        "Description": "Standardized evals across labs.",
+        "Faction": "AlignmentCoalition",
+        "Category": "upgrade",
+        "RequiredFlags": ["human_focus_safety_2"],
+        "Cost": { "Budget": 0.25, "Trust": 0.1 },
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 1.2 },
+            { "Type": "ModifyLabStat", "LabId": "anthropomorphic", "LabStat": "SafetyCommitment", "Amount": 0.1 }
+        ],
+        "GrantsFlag": "human_eval_stack"
+    },
+    {
+        "Id": "upgrade_human_chip_registry",
+        "Name": "Chip Registry",
+        "Description": "Track frontier chip shipments and capacity.",
+        "Faction": "AlignmentCoalition",
+        "Category": "upgrade",
+        "RequiredFlags": ["human_focus_governance_2"],
+        "Cost": { "Budget": 0.2, "Influence": 0.08 },
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
+            { "Type": "ModifyLabStat", "LabId": "yai", "LabStat": "ComputePFLOPs", "Amount": -10.0 }
+        ],
+        "GrantsFlag": "human_chip_registry"
+    },
+    {
+        "Id": "upgrade_human_incident_coordination",
+        "Name": "Incident Coordination",
+        "Description": "Standing team to triage model and data leaks.",
+        "Faction": "AlignmentCoalition",
+        "Category": "upgrade",
+        "RequiredFlags": ["human_focus_security_2"],
+        "Cost": { "Coordination": 0.1, "Trust": 0.05 },
+        "Effects": [
+            { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Coordination", "Amount": 0.2 },
+            { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.05 }
+        ],
+        "GrantsFlag": "human_incident_coordination"
+    },
+    {
+        "Id": "upgrade_human_secure_compute",
+        "Name": "Secure Compute",
+        "Description": "Harden datacenters against model theft.",
+        "Faction": "AlignmentCoalition",
+        "Category": "upgrade",
+        "RequiredFlags": ["human_focus_security_2"],
+        "Cost": { "Budget": 0.2, "Coordination": 0.1 },
+        "Effects": [
+            { "Type": "ModifyLabStat", "LabId": "openmind", "LabStat": "Security", "Amount": 0.1 },
+            { "Type": "ModifyLabStat", "LabId": "deepbrain", "LabStat": "Security", "Amount": 0.08 },
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 }
+        ],
+        "GrantsFlag": "human_secure_compute"
+    }
+];

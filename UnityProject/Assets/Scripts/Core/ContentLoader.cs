@@ -1,23 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Clippy.SimCore
 {
     public static class ContentLoader
     {
-        private static JsonSerializerOptions CreateOptions()
+        private static JsonSerializerSettings CreateSettings()
         {
-            var options = new JsonSerializerOptions
+            var settings = new JsonSerializerSettings
             {
-                PropertyNameCaseInsensitive = true,
-                ReadCommentHandling = JsonCommentHandling.Skip,
-                AllowTrailingCommas = true
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
-            options.Converters.Add(new JsonStringEnumConverter());
-            return options;
+            settings.Converters.Add(new StringEnumConverter());
+            return settings;
         }
 
         /// <summary>
@@ -30,18 +29,18 @@ namespace Clippy.SimCore
                 throw new DirectoryNotFoundException($"Content directory not found: {directory}");
             }
 
-            var options = CreateOptions();
+            var settings = CreateSettings();
 
             var content = new SimContent
             {
-                Scenario = LoadFile<ScenarioDefinition>(Path.Combine(directory, "scenario.json"), options) ?? new ScenarioDefinition(),
-                Actions = LoadFile<List<ActionDefinition>>(Path.Combine(directory, "actions.json"), options) ?? new List<ActionDefinition>(),
-                Events = LoadFile<List<EventDefinition>>(Path.Combine(directory, "events.json"), options) ?? new List<EventDefinition>(),
-                Characters = LoadFile<List<CharacterDefinition>>(Path.Combine(directory, "characters.json"), options) ?? new List<CharacterDefinition>()
+                Scenario = LoadFile<ScenarioDefinition>(Path.Combine(directory, "scenario.json"), settings) ?? new ScenarioDefinition(),
+                Actions = LoadFile<List<ActionDefinition>>(Path.Combine(directory, "actions.json"), settings) ?? new List<ActionDefinition>(),
+                Events = LoadFile<List<EventDefinition>>(Path.Combine(directory, "events.json"), settings) ?? new List<EventDefinition>(),
+                Characters = LoadFile<List<CharacterDefinition>>(Path.Combine(directory, "characters.json"), settings) ?? new List<CharacterDefinition>()
             };
 
             var upgradesPath = Path.Combine(directory, "upgrades.json");
-            var upgrades = LoadFile<List<ActionDefinition>>(upgradesPath, options);
+            var upgrades = LoadFile<List<ActionDefinition>>(upgradesPath, settings);
             if (upgrades != null)
             {
                 content.Actions.AddRange(upgrades);
@@ -55,19 +54,19 @@ namespace Clippy.SimCore
         /// </summary>
         public static SimContent Load(string scenarioJson, string actionsJson, string eventsJson, string? upgradesJson = null, string? charactersJson = null)
         {
-            var options = CreateOptions();
+            var settings = CreateSettings();
 
             var content = new SimContent
             {
-                Scenario = ParseJson<ScenarioDefinition>(scenarioJson, options) ?? new ScenarioDefinition(),
-                Actions = ParseJson<List<ActionDefinition>>(actionsJson, options) ?? new List<ActionDefinition>(),
-                Events = ParseJson<List<EventDefinition>>(eventsJson, options) ?? new List<EventDefinition>(),
-                Characters = !string.IsNullOrEmpty(charactersJson) ? ParseJson<List<CharacterDefinition>>(charactersJson, options) ?? new List<CharacterDefinition>() : new List<CharacterDefinition>()
+                Scenario = ParseJson<ScenarioDefinition>(scenarioJson, settings) ?? new ScenarioDefinition(),
+                Actions = ParseJson<List<ActionDefinition>>(actionsJson, settings) ?? new List<ActionDefinition>(),
+                Events = ParseJson<List<EventDefinition>>(eventsJson, settings) ?? new List<EventDefinition>(),
+                Characters = !string.IsNullOrEmpty(charactersJson) ? ParseJson<List<CharacterDefinition>>(charactersJson, settings) ?? new List<CharacterDefinition>() : new List<CharacterDefinition>()
             };
 
             if (!string.IsNullOrEmpty(upgradesJson))
             {
-                var upgrades = ParseJson<List<ActionDefinition>>(upgradesJson, options);
+                var upgrades = ParseJson<List<ActionDefinition>>(upgradesJson, settings);
                 if (upgrades != null)
                 {
                     content.Actions.AddRange(upgrades);
@@ -77,7 +76,7 @@ namespace Clippy.SimCore
             return content;
         }
 
-        private static T? LoadFile<T>(string path, JsonSerializerOptions options)
+        private static T? LoadFile<T>(string path, JsonSerializerSettings settings)
         {
             if (!File.Exists(path))
             {
@@ -85,17 +84,17 @@ namespace Clippy.SimCore
             }
 
             var json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<T>(json, options);
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
-        private static T? ParseJson<T>(string json, JsonSerializerOptions options)
+        private static T? ParseJson<T>(string json, JsonSerializerSettings settings)
         {
             if (string.IsNullOrEmpty(json))
             {
                 return default;
             }
 
-            return JsonSerializer.Deserialize<T>(json, options);
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
     }
 }

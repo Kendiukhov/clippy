@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using Clippy.SimCore;
 
@@ -137,7 +138,7 @@ namespace Clippy.Unity.UI
     /// Individual progress bar component with label and tooltip.
     /// </summary>
     [System.Serializable]
-    public class ProgressBar : MonoBehaviour
+    public class ProgressBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private TextMeshProUGUI _labelText;
         [SerializeField] private TextMeshProUGUI _valueText;
@@ -152,6 +153,14 @@ namespace Clippy.Unity.UI
         [SerializeField] private Color _neutralColor = new Color(0.5f, 0.5f, 0.6f);
 
         private string _tooltip;
+
+        private void Awake()
+        {
+            if (_tooltipGroup != null)
+            {
+                _tooltipGroup.alpha = 0f;
+            }
+        }
 
         public void SetValue(string label, float value, float maxValue, string tooltip = "", bool isNegative = false)
         {
@@ -194,6 +203,16 @@ namespace Clippy.Unity.UI
             {
                 _tooltipGroup.alpha = 0f;
             }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            ShowTooltip();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            HideTooltip();
         }
     }
 }

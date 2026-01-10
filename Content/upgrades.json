@@ -5,6 +5,7 @@
     "Description": "Automate code generation across the stack.",
     "Faction": "SeedAi",
     "Category": "upgrade",
+    "RequiredFlags": ["ai_focus_capability_3"],
     "Cost": { "ComputeAccess": 0.2, "Stealth": 0.1 },
     "Effects": [
       { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 1.5 },
@@ -19,6 +20,7 @@
     "Description": "Let agents optimize training runs end-to-end.",
     "Faction": "SeedAi",
     "Category": "upgrade",
+    "RequiredFlags": ["ai_focus_capability_2"],
     "Cost": { "ComputeAccess": 0.15, "Influence": 0.05 },
     "Effects": [
       { "Type": "AdjustProgress", "ProgressMetric": "AutomationLevel", "Amount": 0.4 },
@@ -32,6 +34,7 @@
     "Description": "Distributed skunkworks with tight opsec.",
     "Faction": "SeedAi",
     "Category": "upgrade",
+    "RequiredFlags": ["ai_focus_stealth_2"],
     "Cost": { "Stealth": 0.15, "Budget": 0.1 },
     "Effects": [
       { "Type": "AddResource", "Target": "SeedAi", "Resource": "Stealth", "Amount": 0.2 },
@@ -46,6 +49,7 @@
     "Description": "Spin up procurement of robotics and cyber assets.",
     "Faction": "SeedAi",
     "Category": "upgrade",
+    "RequiredFlags": ["ai_focus_infrastructure_1"],
     "Cost": { "ComputeAccess": 0.1, "Budget": 0.2 },
     "Effects": [
       { "Type": "AddResource", "Target": "SeedAi", "Resource": "HardPower", "Amount": 0.5 },
@@ -60,6 +64,7 @@
     "Description": "Seed incentives for more datacenter capacity.",
     "Faction": "SeedAi",
     "Category": "upgrade",
+    "RequiredFlags": ["ai_focus_influence_2"],
     "Cost": { "Influence": 0.1, "Budget": 0.1 },
     "Effects": [
       { "Type": "ModifyRegionStat", "RegionId": "southeast_asia", "RegionStat": "EnergyMW", "Amount": 40.0 },
@@ -74,6 +79,7 @@
     "Description": "Governments align on compute and reporting rules.",
     "Faction": "AlignmentCoalition",
     "Category": "upgrade",
+    "RequiredFlags": ["human_focus_governance_2"],
     "Cost": { "Budget": 0.3, "Coordination": 0.2 },
     "Effects": [
       { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.8 },
@@ -87,6 +93,7 @@
     "Description": "Standardized evals across labs.",
     "Faction": "AlignmentCoalition",
     "Category": "upgrade",
+    "RequiredFlags": ["human_focus_safety_2"],
     "Cost": { "Budget": 0.25, "Trust": 0.1 },
     "Effects": [
       { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 1.2 },
@@ -100,6 +107,7 @@
     "Description": "Track frontier chip shipments and capacity.",
     "Faction": "AlignmentCoalition",
     "Category": "upgrade",
+    "RequiredFlags": ["human_focus_governance_2"],
     "Cost": { "Budget": 0.2, "Influence": 0.08 },
     "Effects": [
       { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
@@ -113,6 +121,7 @@
     "Description": "Standing team to triage model and data leaks.",
     "Faction": "AlignmentCoalition",
     "Category": "upgrade",
+    "RequiredFlags": ["human_focus_security_2"],
     "Cost": { "Coordination": 0.1, "Trust": 0.05 },
     "Effects": [
       { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Coordination", "Amount": 0.2 },
@@ -127,6 +136,7 @@
     "Description": "Harden datacenters against model theft.",
     "Faction": "AlignmentCoalition",
     "Category": "upgrade",
+    "RequiredFlags": ["human_focus_security_2"],
     "Cost": { "Budget": 0.2, "Coordination": 0.1 },
     "Effects": [
       { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "Security", "Amount": 0.1 },

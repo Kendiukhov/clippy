@@ -208,10 +208,10 @@ namespace Clippy.SimCore
 
     public sealed class Simulation
     {
-        private const float AiCapabilityThreshold = 10f;
-        private const float AiAutonomyThreshold = 1.5f;
-        private const float HumanAlignmentThreshold = 10f;
-        private const float HumanGovernanceThreshold = 1.5f;
+        private const float AiCapabilityThreshold = 14f;
+        private const float AiAutonomyThreshold = 1.8f;
+        private const float HumanAlignmentThreshold = 14f;
+        private const float HumanGovernanceThreshold = 1.8f;
 
         private readonly SimContent _content;
         private readonly IActionPicker _aiPicker;
@@ -748,7 +748,7 @@ namespace Clippy.SimCore
                 return (GameOutcome.HumanVictory, "Governance and alignment readiness achieved in time.");
             }
 
-            if (world.AiFaction.Suspicion >= 1.5f && world.Progress.GovernanceControl >= 1f)
+            if (world.AiFaction.Suspicion >= 1.8f && world.Progress.GovernanceControl >= 1f)
             {
                 return (GameOutcome.HumanVictory, "Containment triggered by high suspicion.");
             }

@@ -1,7 +1,10 @@
 {
     "name": "Clippy.Unity",
     "rootNamespace": "Clippy.Unity",
-    "references": [],
+    "references": [
+        "Unity.TextMeshPro",
+        "Newtonsoft.Json"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
