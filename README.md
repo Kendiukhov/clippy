@@ -214,7 +214,7 @@ The game is under active development. Key areas for contribution:
 
 ## License
 
-[Add license information]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
