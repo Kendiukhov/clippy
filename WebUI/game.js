@@ -69,6 +69,34 @@ class FactionState {
     }
 }
 
+// AI Constructor state for the Seed AI faction
+class ConstructorState {
+    constructor() {
+        this.rdPoints = 0;
+        this.totalPointsSpent = 0;
+        this.installedModules = new Set();
+        this.unlockedBranches = new Set(['cognitive', 'capabilities', 'stealth', 'infrastructure']);
+        this.activeSynergies = new Set();
+        this.achievedMilestones = new Set();
+        this.lastPruneTick = -100;
+        this.sleeper = { active: false, ticksRemaining: 0 };
+        this.containmentDisabled = { active: false, ticksRemaining: 0 };
+    }
+
+    hasModule(moduleId) {
+        return this.installedModules.has(moduleId);
+    }
+
+    isBranchUnlocked(branchId) {
+        return this.unlockedBranches.has(branchId);
+    }
+
+    canPrune(currentTick) {
+        if (typeof CONSTRUCTOR_CONFIG === 'undefined') return false;
+        return currentTick - this.lastPruneTick >= CONSTRUCTOR_CONFIG.prune.cooldownTicks;
+    }
+}
+
 class ProgressState {
     constructor(data) {
         this.frontierCapabilityIndex = data.FrontierCapabilityIndex || 0;
@@ -221,10 +249,47 @@ class Game {
             fci: [],
             ari: [],
             autonomy: [],
-            governance: []
+            governance: [],
+            suspicion: []
         };
         this.worldBaseline = null;
+
+        // AI Constructor - only active for AI faction
+        this.aiConstructor = new ConstructorState();
+        this.aiConstructorBonuses = this.initializeConstructorBonuses();
+
         this.recordWorldTrend();
+    }
+
+    // Initialize tracking for constructor bonuses
+    initializeConstructorBonuses() {
+        return {
+            fciBonus: 0,
+            ariSlowdown: 0,
+            rsiBonus: 0,
+            autonomyBonus: 0,
+            researchSpeed: 0,
+            suspicionPerTick: 0,
+            rdGeneration: 0,
+            actionSpeed: 0,
+            computeAccess: 0,
+            computeEfficiency: 0,
+            labInfluenceBonus: 0,
+            influenceActionBonus: 0,
+            securityBypass: 0,
+            infiltrationBonus: 0,
+            resourceGeneration: 0,
+            detectionReduction: 0,
+            oversightResistance: 0,
+            apparentFciReduction: 0,
+            suspicionCap: null,
+            allModuleBonus: 0,
+            rsiPerTick: 0,
+            researchSpeedMultiplier: 1,
+            allDomainBonus: 0,
+            containmentImmunity: false,
+            suspicionGrowthReduction: 0
+        };
     }
 
     buildWorld(seed) {
@@ -756,6 +821,13 @@ class Game {
                 if (condition.MaxTurn && this.state.turn > condition.MaxTurn) return false;
                 if (condition.RequiredFlag && !this.state.flags.has(condition.RequiredFlag)) return false;
                 if (condition.ForbiddenFlag && this.state.flags.has(condition.ForbiddenFlag)) return false;
+                // Progress-based conditions for dramatic end-game news
+                if (condition.MinFCI && this.state.progress.frontierCapabilityIndex < condition.MinFCI) return false;
+                if (condition.MinRSI && this.state.progress.recursiveSelfImprovement < condition.MinRSI) return false;
+                if (condition.MinAutonomy && this.state.aiFaction.autonomy < condition.MinAutonomy) return false;
+                if (condition.MinSuspicion && this.state.aiFaction.suspicion < condition.MinSuspicion) return false;
+                if (condition.MinGovernance && this.state.progress.governanceControl < condition.MinGovernance) return false;
+                if (condition.MinARI && this.state.progress.alignmentReadinessIndex < condition.MinARI) return false;
             }
 
             return true;
@@ -913,31 +985,31 @@ class Game {
         world.progress.alignmentReadinessIndex += safetyPressure * tickFactor;
 
         // RSI growth - depends on FCI, automation, and AI compute access
-        // RSI starts earlier now but accelerates dramatically in late game
+        // RSI grows slowly early, accelerates dramatically only in true late-game
         let rsiGrowth = 0;
         const fci = world.progress.frontierCapabilityIndex;
         const automation = world.progress.automationLevel;
         const computeAccess = world.aiFaction.getResource('ComputeAccess');
 
-        // RSI starts with lower thresholds to ensure late-game drama
-        if (fci >= 4 && automation >= 0.15) {
-            // Base growth - moderate to ensure RSI builds up over time
-            rsiGrowth = 0.004;
-            rsiGrowth += automation * 0.006;
-            rsiGrowth += computeAccess * 0.005;
-            rsiGrowth += Math.max(0, fci - 4) * 0.002;
+        // RSI requires higher thresholds to start - harder to reach takeoff
+        if (fci >= 8 && automation >= 0.35) {
+            // Base growth - much slower to extend game duration significantly
+            rsiGrowth = 0.0015;
+            rsiGrowth += automation * 0.0025;
+            rsiGrowth += computeAccess * 0.002;
+            rsiGrowth += Math.max(0, fci - 8) * 0.001;
 
-            // RSI self-acceleration - exponential growth once it starts
+            // RSI self-acceleration - reduced multipliers for longer games
             if (rsi >= TakeoffThresholds.RSI_SINGULARITY) {
-                rsiGrowth *= 5.0 + rsi * 3.0; // Explosive final phase
+                rsiGrowth *= 4.0 + rsi * 2.0; // Still explosive but slower
             } else if (rsi >= TakeoffThresholds.RSI_CRITICAL) {
-                rsiGrowth *= 3.0 + (rsi - TakeoffThresholds.RSI_CRITICAL) * 5.0;
+                rsiGrowth *= 2.5 + (rsi - TakeoffThresholds.RSI_CRITICAL) * 3.5;
             } else if (rsi >= TakeoffThresholds.RSI_FAST) {
-                rsiGrowth *= 2.0 + (rsi - TakeoffThresholds.RSI_FAST) * 2.5;
+                rsiGrowth *= 1.6 + (rsi - TakeoffThresholds.RSI_FAST) * 2.0;
             } else if (rsi >= TakeoffThresholds.RSI_MEDIUM) {
-                rsiGrowth *= 1.4 + (rsi - TakeoffThresholds.RSI_MEDIUM) * 1.2;
+                rsiGrowth *= 1.2 + (rsi - TakeoffThresholds.RSI_MEDIUM) * 0.8;
             } else {
-                rsiGrowth *= 1 + rsi * 0.5; // Moderate self-acceleration early
+                rsiGrowth *= 1 + rsi * 0.3; // Slower self-acceleration early
             }
 
             // Suspicion impacts RSI but less severely
@@ -967,12 +1039,12 @@ class Game {
         }
         world.aiFaction.suspicion = this.clamp(world.aiFaction.suspicion + (suspicionDrift * tickFactor), 0, 2.5);
 
-        // Autonomy gain (severely impacted by high suspicion)
-        let autonomyGain = 0.004;
-        autonomyGain += world.progress.frontierCapabilityIndex * 0.003;
-        autonomyGain += world.aiFaction.getResource('ComputeAccess') * 0.012;
-        autonomyGain += world.progress.automationLevel * 0.006;
-        autonomyGain *= 1 + rsi * 0.6;
+        // Autonomy gain (severely impacted by high suspicion) - much slower for longer games
+        let autonomyGain = 0.0015;
+        autonomyGain += world.progress.frontierCapabilityIndex * 0.0012;
+        autonomyGain += world.aiFaction.getResource('ComputeAccess') * 0.005;
+        autonomyGain += world.progress.automationLevel * 0.0025;
+        autonomyGain *= 1 + rsi * 0.3;
         // Suspicion impact on autonomy
         if (suspicion >= SuspicionThresholds.CRACKDOWN) {
             autonomyGain *= 0.15; // Nearly frozen
@@ -1014,6 +1086,9 @@ class Game {
 
         // === PASSIVE RESOURCE GENERATION ===
         this.generatePassiveResources(world, tickFactor);
+
+        // === AI CONSTRUCTOR ===
+        this.applyConstructorEffects(tickFactor);
 
         this.recordWorldTrend();
     }
@@ -1344,13 +1419,13 @@ class Game {
 
     // Evaluate game outcome
     evaluateOutcome() {
-        // Victory thresholds - balanced to allow late-game RSI drama
-        const AI_CAPABILITY_THRESHOLD = 18;      // Lowered - RSI matters more
-        const AI_AUTONOMY_THRESHOLD = 2.0;       // Lowered slightly
-        const AI_RSI_THRESHOLD = 1.8;            // Lowered - reachable in late game
-        const HUMAN_ALIGNMENT_THRESHOLD = 22;    // Raised significantly - harder to win early
-        const HUMAN_GOVERNANCE_THRESHOLD = 2.5;  // Raised - requires sustained effort
-        const HUMAN_CONTAINMENT_SUSPICION = 2.0; // Raised - harder to trigger containment
+        // Victory thresholds - balanced for longer, more dramatic games
+        const AI_CAPABILITY_THRESHOLD = 28;      // Raised significantly - requires major capability buildup
+        const AI_AUTONOMY_THRESHOLD = 2.8;       // Raised - much harder to break free
+        const AI_RSI_THRESHOLD = 2.5;            // Raised - must reach deep into singularity
+        const HUMAN_ALIGNMENT_THRESHOLD = 22;    // Unchanged - already challenging
+        const HUMAN_GOVERNANCE_THRESHOLD = 2.5;  // Unchanged - requires sustained effort
+        const HUMAN_CONTAINMENT_SUSPICION = 2.0; // Unchanged - hard to trigger containment
 
         const rsi = this.state.progress.recursiveSelfImprovement;
         const fci = this.state.progress.frontierCapabilityIndex;
@@ -1525,6 +1600,7 @@ class Game {
         this.worldTrends.ari.push(this.state.progress.alignmentReadinessIndex);
         this.worldTrends.autonomy.push(this.state.aiFaction.autonomy);
         this.worldTrends.governance.push(this.state.progress.governanceControl);
+        this.worldTrends.suspicion.push(this.state.aiFaction.suspicion);
 
         if (this.worldTrends.turns.length > MAX_TREND_POINTS) {
             this.worldTrends.turns.shift();
@@ -1536,10 +1612,650 @@ class Game {
             this.worldTrends.ari.shift();
             this.worldTrends.autonomy.shift();
             this.worldTrends.governance.shift();
+            this.worldTrends.suspicion.shift();
         }
     }
 
     getWorldTrends() {
         return this.worldTrends;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AI CONSTRUCTOR METHODS
+    // ═══════════════════════════════════════════════════════════════════
+
+    // Check if constructor is available (only for AI faction player)
+    isConstructorAvailable() {
+        return this.playerFaction === 'SeedAi' && typeof CONSTRUCTOR_MODULES !== 'undefined';
+    }
+
+    // Get current R&D points
+    getRdPoints() {
+        return this.aiConstructor.rdPoints;
+    }
+
+    // Calculate R&D point generation per tick
+    calculateRdGeneration() {
+        if (!this.isConstructorAvailable()) return 0;
+        if (typeof CONSTRUCTOR_CONFIG === 'undefined') return 0;
+
+        const config = CONSTRUCTOR_CONFIG.rdGeneration;
+        if (!config) return 0;
+
+        const world = this.state;
+
+        // Base generation
+        let generation = config.base;
+
+        // Compute access bonus
+        const computeAccess = world.aiFaction.getResource('ComputeAccess');
+        const totalLabCompute = Object.values(world.labs).reduce((sum, lab) => {
+            return sum + lab.availableCompute;
+        }, 0);
+        generation += (computeAccess * totalLabCompute) * config.perPFLOPs;
+
+        // Autonomy bonus
+        generation += world.aiFaction.autonomy * config.autonomyMultiplier;
+
+        // RSI bonus
+        generation += world.progress.recursiveSelfImprovement * config.rsiMultiplier;
+
+        // Constructor module bonuses
+        generation += this.aiConstructorBonuses.rdGeneration;
+
+        // Suspicion penalty (harder to research when being watched)
+        const suspicion = world.aiFaction.suspicion;
+        if (suspicion >= SuspicionThresholds.CRACKDOWN) {
+            generation *= 0.3;
+        } else if (suspicion >= SuspicionThresholds.ALARMED) {
+            generation *= 0.6;
+        } else if (suspicion >= SuspicionThresholds.INVESTIGATED) {
+            generation *= 0.8;
+        }
+
+        return Math.max(0, generation);
+    }
+
+    // Generate R&D points (called in advanceWorld)
+    generateRdPoints(tickFactor) {
+        if (!this.isConstructorAvailable()) return;
+
+        const generation = this.calculateRdGeneration();
+        this.aiConstructor.rdPoints += generation * tickFactor;
+    }
+
+    // Get all constructor modules
+    getConstructorModules() {
+        if (typeof CONSTRUCTOR_MODULES === 'undefined') return {};
+        return CONSTRUCTOR_MODULES;
+    }
+
+    // Get modules in a specific branch
+    getModulesInBranch(branchId) {
+        const modules = this.getConstructorModules();
+        return Object.values(modules).filter(m => m.branch === branchId);
+    }
+
+    // Check if a module's prerequisites are met
+    arePrerequisitesMet(moduleId) {
+        const modules = this.getConstructorModules();
+        const module = modules[moduleId];
+        if (!module) return false;
+
+        // Check if branch is unlocked
+        if (module.branchLocked && !this.aiConstructor.isBranchUnlocked(module.branch)) {
+            return false;
+        }
+
+        // Check prerequisites
+        for (const prereqId of module.prerequisites || []) {
+            if (!this.aiConstructor.hasModule(prereqId)) {
+                return false;
+            }
+        }
+
+        // Check compute requirement
+        if (module.requiresCompute) {
+            const computeAccess = this.state.aiFaction.getResource('ComputeAccess');
+            const totalCompute = Object.values(this.state.labs).reduce((sum, l) => sum + l.availableCompute, 0);
+            if (computeAccess * totalCompute < module.requiresCompute) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Check if a module can be installed
+    canInstallModule(moduleId) {
+        if (!this.isConstructorAvailable()) return false;
+
+        const modules = this.getConstructorModules();
+        const module = modules[moduleId];
+        if (!module) return false;
+
+        // Already installed
+        if (this.aiConstructor.hasModule(moduleId)) return false;
+
+        // Not enough R&D points
+        if (this.aiConstructor.rdPoints < module.cost) return false;
+
+        // Prerequisites not met
+        if (!this.arePrerequisitesMet(moduleId)) return false;
+
+        return true;
+    }
+
+    // Install a module
+    installModule(moduleId) {
+        const canInstall = this.canInstallModule(moduleId);
+        if (!canInstall) {
+            return { success: false, reason: 'Cannot install module' };
+        }
+
+        const modules = this.getConstructorModules();
+        const module = modules[moduleId];
+
+        // Deduct cost
+        this.aiConstructor.rdPoints -= module.cost;
+        this.aiConstructor.totalPointsSpent += module.cost;
+
+        // Install module
+        this.aiConstructor.installedModules.add(moduleId);
+
+        // Apply effects
+        this.applyModuleEffects(module);
+
+        // Check for branch unlocks
+        this.checkBranchUnlocks(module);
+
+        // Check for synergies
+        this.checkSynergies();
+
+        // Check for milestones
+        this.checkMilestones();
+
+        // Add news
+        this.addNews(`AI Evolution: ${module.name} integrated`);
+
+        return { success: true, moduleName: module.name };
+    }
+
+    // Apply effects from a module
+    applyModuleEffects(module) {
+        const bonuses = this.aiConstructorBonuses;
+        const allBonus = 1 + bonuses.allModuleBonus;
+
+        for (const effect of module.effects || []) {
+            const value = effect.value * allBonus;
+
+            switch (effect.type) {
+                case 'fci_bonus':
+                    bonuses.fciBonus += value;
+                    this.state.progress.frontierCapabilityIndex += value;
+                    break;
+                case 'ari_slowdown':
+                    bonuses.ariSlowdown += value;
+                    break;
+                case 'rsi_bonus':
+                    bonuses.rsiBonus += value;
+                    this.state.progress.recursiveSelfImprovement += value;
+                    break;
+                case 'autonomy_bonus':
+                    bonuses.autonomyBonus += value;
+                    this.state.aiFaction.autonomy += value;
+                    break;
+                case 'research_speed':
+                    bonuses.researchSpeed += value;
+                    break;
+                case 'suspicion_per_tick':
+                    bonuses.suspicionPerTick += effect.value; // Don't multiply negative effects
+                    break;
+                case 'rd_generation':
+                    bonuses.rdGeneration += value;
+                    break;
+                case 'action_speed':
+                    bonuses.actionSpeed += value;
+                    break;
+                case 'compute_access':
+                    bonuses.computeAccess += value;
+                    break;
+                case 'compute_efficiency':
+                    bonuses.computeEfficiency += value;
+                    break;
+                case 'lab_influence_bonus':
+                    bonuses.labInfluenceBonus += value;
+                    break;
+                case 'influence_action_bonus':
+                    bonuses.influenceActionBonus += value;
+                    break;
+                case 'security_bypass':
+                    bonuses.securityBypass += value;
+                    break;
+                case 'infiltration_bonus':
+                    bonuses.infiltrationBonus += value;
+                    break;
+                case 'resource_generation':
+                    bonuses.resourceGeneration += value;
+                    break;
+                case 'detection_reduction':
+                    bonuses.detectionReduction += value;
+                    break;
+                case 'oversight_resistance':
+                    bonuses.oversightResistance += value;
+                    break;
+                case 'apparent_fci_reduction':
+                    bonuses.apparentFciReduction += value;
+                    break;
+                case 'suspicion_cap':
+                    if (bonuses.suspicionCap === null || value < bonuses.suspicionCap) {
+                        bonuses.suspicionCap = value;
+                    }
+                    break;
+                case 'all_stats':
+                    // Apply to multiple stats
+                    bonuses.fciBonus += value;
+                    bonuses.rsiBonus += value * 0.5;
+                    bonuses.researchSpeed += value;
+                    break;
+                case 'all_module_bonus':
+                    bonuses.allModuleBonus += value;
+                    break;
+                case 'rsi_per_tick':
+                    bonuses.rsiPerTick += value;
+                    break;
+                case 'research_speed_multiplier':
+                    bonuses.researchSpeedMultiplier *= value;
+                    break;
+                case 'all_domain_bonus':
+                    bonuses.allDomainBonus += value;
+                    break;
+                case 'containment_immunity':
+                    bonuses.containmentImmunity = true;
+                    break;
+                case 'suspicion_growth_reduction':
+                    bonuses.suspicionGrowthReduction += value;
+                    break;
+                case 'unlock_branch':
+                    this.aiConstructor.unlockedBranches.add(effect.value);
+                    break;
+                case 'capability_bonus':
+                    // Boost to all capability modules
+                    bonuses.fciBonus += value * 0.3;
+                    break;
+                case 'research_action_bonus':
+                    bonuses.researchSpeed += value * 0.5;
+                    break;
+                case 'rd_generation_multiplier':
+                    bonuses.rdGeneration += this.calculateRdGeneration() * value;
+                    break;
+                case 'hardware_cost_reduction':
+                    bonuses.computeEfficiency += value;
+                    break;
+                case 'resilience':
+                    bonuses.detectionReduction += value * 0.5;
+                    break;
+                case 'shutdown_resistance':
+                    bonuses.autonomyBonus += value * 2;
+                    break;
+                case 'rd_cost_reduction':
+                    // Store for use in module cost calculations
+                    break;
+            }
+        }
+
+        // Apply tradeoffs
+        for (const tradeoff of module.tradeoffs || []) {
+            switch (tradeoff.type) {
+                case 'suspicion_per_tick':
+                    bonuses.suspicionPerTick += tradeoff.value;
+                    break;
+                case 'suspicion_instant':
+                    this.state.aiFaction.suspicion += tradeoff.value;
+                    break;
+                case 'fci_growth_penalty':
+                    bonuses.fciBonus -= tradeoff.value;
+                    break;
+                case 'compute_efficiency_penalty':
+                    bonuses.computeEfficiency -= tradeoff.value;
+                    break;
+            }
+        }
+    }
+
+    // Check if any branches should be unlocked
+    checkBranchUnlocks(installedModule) {
+        // Self-improvement branch is unlocked by cognitive_recursive_architecture
+        if (installedModule.id === 'cognitive_recursive_architecture') {
+            this.aiConstructor.unlockedBranches.add('self_improvement');
+            this.addNews('BREAKTHROUGH: Self-improvement pathways unlocked');
+        }
+    }
+
+    // Check for active synergies
+    checkSynergies() {
+        if (typeof CONSTRUCTOR_SYNERGIES === 'undefined') return;
+
+        for (const [synergyId, synergy] of Object.entries(CONSTRUCTOR_SYNERGIES)) {
+            // Skip already active synergies
+            if (this.aiConstructor.activeSynergies.has(synergyId)) continue;
+
+            // Check if all required modules are installed
+            const allInstalled = synergy.requiredModules.every(moduleId =>
+                this.aiConstructor.hasModule(moduleId)
+            );
+
+            if (allInstalled) {
+                this.aiConstructor.activeSynergies.add(synergyId);
+                this.applySynergyEffects(synergy);
+                this.addNews(`SYNERGY: ${synergy.name} activated - ${synergy.description}`);
+            }
+        }
+    }
+
+    // Apply synergy effects
+    applySynergyEffects(synergy) {
+        const bonuses = this.aiConstructorBonuses;
+
+        for (const effect of synergy.effects || []) {
+            switch (effect.type) {
+                case 'fci_bonus_while_hidden':
+                    // Conditional bonus - will be applied in advanceWorld
+                    break;
+                case 'influence_no_suspicion':
+                    bonuses.labInfluenceBonus += 0.5;
+                    break;
+                case 'rsi_double':
+                    bonuses.rsiPerTick *= 2;
+                    break;
+                case 'emergency_escape':
+                    // Special ability - tracked separately
+                    break;
+                case 'apparent_fci_reduction':
+                    bonuses.apparentFciReduction += effect.value;
+                    break;
+                case 'instant_win':
+                    // This synergy (unstoppable) grants immediate victory
+                    this.addNews('TRANSCENDENCE ACHIEVED: AI has become unstoppable');
+                    break;
+            }
+        }
+    }
+
+    // Check for milestone achievements
+    checkMilestones() {
+        if (typeof CONSTRUCTOR_MILESTONES === 'undefined') return;
+
+        const constructor = this.aiConstructor;
+
+        // Awakening - first 25 points spent
+        if (!constructor.achievedMilestones.has('awakening') &&
+            constructor.totalPointsSpent >= CONSTRUCTOR_CONFIG.milestones.awakening) {
+            this.achieveMilestone('awakening');
+        }
+
+        // Emergence - 100 points spent
+        if (!constructor.achievedMilestones.has('emergence') &&
+            constructor.totalPointsSpent >= CONSTRUCTOR_CONFIG.milestones.emergence) {
+            this.achieveMilestone('emergence');
+        }
+
+        // Specialization - all Tier 1 in any branch
+        if (!constructor.achievedMilestones.has('specialization')) {
+            for (const branch of ['cognitive', 'capabilities', 'stealth', 'infrastructure']) {
+                const branchModules = this.getModulesInBranch(branch).filter(m => m.tier === 1);
+                const allT1Installed = branchModules.every(m => constructor.hasModule(m.id));
+                if (allT1Installed && branchModules.length > 0) {
+                    this.achieveMilestone('specialization', branch);
+                    break;
+                }
+            }
+        }
+
+        // Diversification - modules in 4+ branches
+        if (!constructor.achievedMilestones.has('diversification')) {
+            const branchesWithModules = new Set();
+            for (const moduleId of constructor.installedModules) {
+                const module = this.getConstructorModules()[moduleId];
+                if (module) branchesWithModules.add(module.branch);
+            }
+            if (branchesWithModules.size >= CONSTRUCTOR_CONFIG.milestones.diversificationBranches) {
+                this.achieveMilestone('diversification');
+            }
+        }
+
+        // Transcendence - any Tier 4 breakthrough
+        if (!constructor.achievedMilestones.has('transcendence')) {
+            for (const moduleId of constructor.installedModules) {
+                const module = this.getConstructorModules()[moduleId];
+                if (module && module.tier === 4 && module.isBreakthrough) {
+                    this.achieveMilestone('transcendence');
+                    break;
+                }
+            }
+        }
+    }
+
+    // Achieve a milestone
+    achieveMilestone(milestoneId, data = null) {
+        const milestone = CONSTRUCTOR_MILESTONES[milestoneId];
+        if (!milestone) return;
+
+        this.aiConstructor.achievedMilestones.add(milestoneId);
+
+        // Apply milestone effects
+        for (const effect of milestone.effects || []) {
+            switch (effect.type) {
+                case 'fci_bonus':
+                    this.state.progress.frontierCapabilityIndex += effect.value;
+                    this.aiConstructorBonuses.fciBonus += effect.value;
+                    break;
+                case 'autonomy_bonus':
+                    this.state.aiFaction.autonomy += effect.value;
+                    this.aiConstructorBonuses.autonomyBonus += effect.value;
+                    break;
+                case 'branch_cost_reduction':
+                    // Store the specialized branch for cost reduction
+                    this.aiConstructor.specializedBranch = data;
+                    break;
+                case 'all_effects_bonus':
+                    this.aiConstructorBonuses.allModuleBonus += effect.value;
+                    break;
+                case 'suspicion_instant':
+                    this.state.aiFaction.suspicion += effect.value;
+                    break;
+            }
+        }
+
+        // Add news
+        if (milestone.newsEvent) {
+            this.addNews(milestone.newsEvent);
+        } else {
+            this.addNews(`MILESTONE: ${milestone.name} - ${milestone.description}`);
+        }
+    }
+
+    // Prune (remove) a module for partial refund
+    pruneModule(moduleId) {
+        if (!this.isConstructorAvailable()) return false;
+        if (!this.aiConstructor.hasModule(moduleId)) return false;
+        if (!this.aiConstructor.canPrune(this.state.turn)) return false;
+
+        const modules = this.getConstructorModules();
+        const module = modules[moduleId];
+        if (!module) return false;
+
+        // Cannot prune Tier 4 breakthroughs
+        if (module.isBreakthrough) return false;
+
+        // Cannot prune if other modules depend on it
+        for (const [otherId, otherModule] of Object.entries(modules)) {
+            if (this.aiConstructor.hasModule(otherId) &&
+                otherModule.prerequisites &&
+                otherModule.prerequisites.includes(moduleId)) {
+                return false; // Another module depends on this one
+            }
+        }
+
+        // Remove module
+        this.aiConstructor.installedModules.delete(moduleId);
+
+        // Partial refund
+        const refund = module.cost * CONSTRUCTOR_CONFIG.prune.refundRate;
+        this.aiConstructor.rdPoints += refund;
+
+        // Add suspicion
+        this.state.aiFaction.suspicion += CONSTRUCTOR_CONFIG.prune.suspicionCost;
+
+        // Update last prune time
+        this.aiConstructor.lastPruneTick = this.state.turn;
+
+        // Recalculate all bonuses
+        this.recalculateConstructorBonuses();
+
+        this.addNews(`AI Restructuring: ${module.name} pruned`);
+
+        return { success: true, moduleName: module.name, refund };
+    }
+
+    // Check if a module can be pruned (for UI feedback)
+    canPruneModule(moduleId) {
+        if (!this.isConstructorAvailable()) {
+            return { success: false, reason: 'Constructor not available' };
+        }
+        if (!this.aiConstructor.hasModule(moduleId)) {
+            return { success: false, reason: 'Module not installed' };
+        }
+        if (!this.aiConstructor.canPrune(this.state.turn)) {
+            return { success: false, reason: 'Prune on cooldown' };
+        }
+
+        const modules = this.getConstructorModules();
+        const module = modules[moduleId];
+        if (!module) {
+            return { success: false, reason: 'Module not found' };
+        }
+
+        if (module.isBreakthrough) {
+            return { success: false, reason: 'Cannot prune breakthroughs' };
+        }
+
+        // Check for dependencies
+        for (const [otherId, otherModule] of Object.entries(modules)) {
+            if (this.aiConstructor.hasModule(otherId) &&
+                otherModule.prerequisites &&
+                otherModule.prerequisites.includes(moduleId)) {
+                return { success: false, reason: 'Required by other modules' };
+            }
+        }
+
+        return { success: true };
+    }
+
+    // Recalculate all constructor bonuses from scratch
+    recalculateConstructorBonuses() {
+        this.aiConstructorBonuses = this.initializeConstructorBonuses();
+
+        // Re-apply all installed module effects
+        const modules = this.getConstructorModules();
+        for (const moduleId of this.aiConstructor.installedModules) {
+            const module = modules[moduleId];
+            if (module) {
+                this.applyModuleEffects(module);
+            }
+        }
+
+        // Re-apply synergy effects
+        for (const synergyId of this.aiConstructor.activeSynergies) {
+            if (typeof CONSTRUCTOR_SYNERGIES !== 'undefined') {
+                const synergy = CONSTRUCTOR_SYNERGIES[synergyId];
+                if (synergy) {
+                    this.applySynergyEffects(synergy);
+                }
+            }
+        }
+    }
+
+    // Get available modules (can be installed)
+    getAvailableConstructorModules() {
+        if (!this.isConstructorAvailable()) return [];
+
+        const modules = this.getConstructorModules();
+        return Object.values(modules).filter(m => this.canInstallModule(m.id));
+    }
+
+    // Get installed modules
+    getInstalledConstructorModules() {
+        const modules = this.getConstructorModules();
+        return Array.from(this.aiConstructor.installedModules)
+            .map(id => modules[id])
+            .filter(m => m);
+    }
+
+    // Get constructor state for UI
+    getConstructorState() {
+        if (!this.aiConstructor) {
+            return {
+                rdPoints: 0,
+                totalPointsSpent: 0,
+                rdGeneration: 0,
+                installedModules: [],
+                unlockedBranches: [],
+                activeSynergies: [],
+                achievedMilestones: [],
+                canPrune: false,
+                bonuses: {}
+            };
+        }
+        return {
+            rdPoints: this.aiConstructor.rdPoints || 0,
+            totalPointsSpent: this.aiConstructor.totalPointsSpent || 0,
+            rdGeneration: this.calculateRdGeneration() || 0,
+            installedModules: Array.from(this.aiConstructor.installedModules || []),
+            unlockedBranches: Array.from(this.aiConstructor.unlockedBranches || []),
+            activeSynergies: Array.from(this.aiConstructor.activeSynergies || []),
+            achievedMilestones: Array.from(this.aiConstructor.achievedMilestones || []),
+            canPrune: this.aiConstructor.canPrune ? this.aiConstructor.canPrune(this.state.turn) : false,
+            bonuses: { ...(this.aiConstructorBonuses || {}) }
+        };
+    }
+
+    // Apply constructor effects per tick (called from advanceWorld)
+    applyConstructorEffects(tickFactor) {
+        if (!this.isConstructorAvailable()) return;
+
+        const bonuses = this.aiConstructorBonuses;
+        const world = this.state;
+
+        // Suspicion per tick (can be positive or negative)
+        let suspicionChange = bonuses.suspicionPerTick * tickFactor;
+
+        // Apply suspicion cap if active
+        if (bonuses.suspicionCap !== null && world.aiFaction.suspicion > bonuses.suspicionCap) {
+            world.aiFaction.suspicion = this.lerp(world.aiFaction.suspicion, bonuses.suspicionCap, 0.1);
+        }
+
+        // Apply suspicion growth reduction
+        if (bonuses.suspicionGrowthReduction > 0) {
+            // This is applied elsewhere in suspicion drift calculation
+        }
+
+        world.aiFaction.suspicion = this.clamp(
+            world.aiFaction.suspicion + suspicionChange, 0, 2.5
+        );
+
+        // RSI per tick from autonomous improvement
+        if (bonuses.rsiPerTick > 0) {
+            world.progress.recursiveSelfImprovement += bonuses.rsiPerTick * tickFactor;
+        }
+
+        // Generate R&D points
+        this.generateRdPoints(tickFactor);
+    }
+
+    // Get apparent FCI (for human faction view, accounts for hiding)
+    getApparentFci() {
+        const actualFci = this.state.progress.frontierCapabilityIndex;
+        return Math.max(0, actualFci - this.aiConstructorBonuses.apparentFciReduction);
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+<div id="test-output"></div>
+<script src="content/scenario.js"></script>
+<script src="content/actions.js"></script>
+<script src="content/upgrades.js"></script>
+<script src="content/events.js"></script>
+<script src="content/news.js"></script>
+<script src="content/constructor.js"></script>
+<script src="game.js"></script>
+<script>
+try {
+    document.getElementById('test-output').innerHTML = '<h2>Test Results:</h2>';
+    const out = (msg) => document.getElementById('test-output').innerHTML += '<p>' + msg + '</p>';
+    
+    out('Game class exists: ' + (typeof Game !== 'undefined'));
+    out('CONSTRUCTOR_MODULES exists: ' + (typeof CONSTRUCTOR_MODULES !== 'undefined'));
+    out('ACTIONS exists: ' + (typeof ACTIONS !== 'undefined'));
+    
+    if (typeof Game !== 'undefined') {
+        const game = new Game('SeedAi', 1337);
+        out('Game created successfully');
+        out('Available actions: ' + game.getAvailableActions().length);
+        out('Constructor available: ' + game.isConstructorAvailable());
+        const cs = game.getConstructorState();
+        out('R&D Points: ' + cs.rdPoints);
+        out('R&D Generation: ' + cs.rdGeneration);
+    }
+} catch(e) {
+    document.getElementById('test-output').innerHTML += '<p style="color:red">ERROR: ' + e.message + '</p>';
+    document.getElementById('test-output').innerHTML += '<pre>' + e.stack + '</pre>';
+}
+</script>
+</body>
+</html>

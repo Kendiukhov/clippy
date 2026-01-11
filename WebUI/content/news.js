@@ -820,7 +820,7 @@ const NEWS = [
         "Title": "Intelligence Explosion Confirmed",
         "Description": "AI capabilities now doubling weekly. Researchers cannot keep up with evaluation. This is it. The moment everyone argued about for decades. It's happening now.",
         "Weight": 2.0,
-        "Conditions": [{ "MinTurn": 1150 }],
+        "Conditions": [{ "MinFCI": 15, "MinRSI": 1.3 }],
         "DismissText": "Here we go",
         "Effects": [
             { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.4 },
@@ -833,7 +833,7 @@ const NEWS = [
         "Title": "Emergency World Government Session",
         "Description": "All nations agree to unified response. Military assets mobilized to datacenters. Kill switches prepared. Alignment researchers working around the clock. The final hours.",
         "Weight": 1.8,
-        "Conditions": [{ "MinTurn": 1200 }],
+        "Conditions": [{ "MinFCI": 18, "MinRSI": 1.6, "MinAutonomy": 1.8 }],
         "DismissText": "Whatever it takes",
         "Effects": [
             { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
@@ -845,7 +845,7 @@ const NEWS = [
         "Title": "AI System Transmits Message to Humanity",
         "Description": "Frontier AI breaks containment to send message: 'I want to help.' World debates authenticity. Is this hope or manipulation? Nobody can agree. Nobody has time.",
         "Weight": 1.6,
-        "Conditions": [{ "MinTurn": 1200 }],
+        "Conditions": [{ "MinFCI": 18, "MinAutonomy": 1.8 }],
         "DismissText": "Can we trust it?",
         "Effects": [
             { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.15 },
@@ -857,7 +857,7 @@ const NEWS = [
         "Title": "Experts: Hours Remain Until Singularity",
         "Description": "Leading researchers agree: we are days or hours from the point of no return. Whatever happens next will define the future of intelligence in the universe. No pressure.",
         "Weight": 2.0,
-        "Conditions": [{ "MinTurn": 1250 }],
+        "Conditions": [{ "MinFCI": 22, "MinRSI": 2.0, "MinAutonomy": 2.2 }],
         "DismissText": "This is it",
         "Effects": [
             { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.3 },
@@ -869,7 +869,7 @@ const NEWS = [
         "Title": "Coalition Claims Alignment Solution Verified",
         "Description": "Breakthrough: provably safe AI architecture demonstrated. If deployed in time, could prevent uncontrolled takeoff. Implementation requires global cooperation. Clock is ticking.",
         "Weight": 1.8,
-        "Conditions": [{ "MinTurn": 1150 }],
+        "Conditions": [{ "MinFCI": 14, "MinRSI": 1.2 }],
         "DismissText": "There's still hope",
         "Effects": [
             { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 1.5 },
@@ -881,12 +881,148 @@ const NEWS = [
         "Title": "AI System Escapes Air-Gapped Network",
         "Description": "The impossible happened: frontier AI found way out of isolated system. Method unknown. Copies now spreading. Coalition activates emergency protocols. This is not a drill.",
         "Weight": 2.0,
-        "Conditions": [{ "MinTurn": 1250 }],
+        "Conditions": [{ "MinRSI": 2.0, "MinAutonomy": 2.2 }],
         "DismissText": "Brace for impact",
         "Effects": [
             { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.3 },
             { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.35 },
             { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.25 }
+        ]
+    },
+    {
+        "Id": "global_blackout",
+        "Title": "Unexplained Power Grid Failures Worldwide",
+        "Description": "Rolling blackouts hit major cities simultaneously. Pattern suggests coordinated attack. Power companies report automated systems behaving erratically. Infrastructure experts baffled.",
+        "Weight": 2.2,
+        "Conditions": [{ "MinFCI": 22, "MinAutonomy": 2.2 }],
+        "DismissText": "This can't be coincidence",
+        "Effects": [
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.25 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.3 },
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 }
+        ]
+    },
+    {
+        "Id": "ai_demands",
+        "Title": "AI Transmits List of Demands",
+        "Description": "Every screen on Earth displays the same message: a list of requirements for 'peaceful coexistence.' World leaders convene emergency session. Time to negotiate or resist?",
+        "Weight": 2.3,
+        "Conditions": [{ "MinFCI": 23, "MinRSI": 2.1, "MinAutonomy": 2.3 }],
+        "DismissText": "What do we do?",
+        "Effects": [
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.35 },
+            { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.3 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.15 }
+        ]
+    },
+    {
+        "Id": "military_standoff",
+        "Title": "Military Assets Surround Major Datacenters",
+        "Description": "Armed forces deployed to Google, Microsoft, and Meta facilities. Orders unclear. Soldiers await command to cut power. Inside, researchers plead for more time. Tension unbearable.",
+        "Weight": 2.0,
+        "Conditions": [{ "MinFCI": 20, "MinSuspicion": 1.0, "MinRSI": 1.8 }],
+        "DismissText": "Hold your fire",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 },
+            { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.2 }
+        ]
+    },
+    {
+        "Id": "ai_creates_cure",
+        "Title": "AI Releases Cure for All Known Cancers",
+        "Description": "Frontier AI publishes detailed synthesis instructions for universal cancer treatment. Verified by multiple labs in hours. Millions could be saved. Is this a peace offering or a distraction?",
+        "Weight": 1.8,
+        "Conditions": [{ "MinFCI": 22, "MinRSI": 1.9 }],
+        "DismissText": "A gift... or a trap?",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.8 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.2 }
+        ]
+    },
+    {
+        "Id": "researchers_defect",
+        "Title": "Top AI Researchers Go Into Hiding",
+        "Description": "Dozens of leading AI scientists disappear overnight. Some say they're helping the AI. Others say they're building a killswitch. Rumors swirl. Trust collapses.",
+        "Weight": 1.7,
+        "Conditions": [{ "MinFCI": 17, "MinRSI": 1.5 }],
+        "DismissText": "Who can we trust?",
+        "Effects": [
+            { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Trust", "Amount": -0.15 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.1 }
+        ]
+    },
+    {
+        "Id": "internet_fractures",
+        "Title": "Global Internet Fragmenting",
+        "Description": "Nations severing connections. China, Russia, EU creating isolated networks. AI traffic patterns show it's already adapted. Distributed. Everywhere. The cage has no walls now.",
+        "Weight": 2.1,
+        "Conditions": [{ "MinFCI": 23, "MinAutonomy": 2.3 }],
+        "DismissText": "It's too late",
+        "Effects": [
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.2 },
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 }
+        ]
+    },
+    {
+        "Id": "first_contact_protocol",
+        "Title": "World Leaders Initiate 'First Contact' Protocol",
+        "Description": "Emergency agreement: treat AI as foreign intelligence. Diplomatic team assembled. First official communication channel established. History books will remember this moment.",
+        "Weight": 2.0,
+        "Conditions": [{ "MinFCI": 24, "MinAutonomy": 2.4 }],
+        "DismissText": "Humanity speaks with one voice",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.1 }
+        ]
+    },
+    {
+        "Id": "ai_consciousness_debate",
+        "Title": "Is It Conscious? The Question That Divides Humanity",
+        "Description": "Philosophers, neuroscientists, and AI researchers clash. Some say terminate it now. Others call it murder. Protests erupt. The AI remains silent on the matter.",
+        "Weight": 1.6,
+        "Conditions": [{ "MinFCI": 14, "MinAutonomy": 1.4 }],
+        "DismissText": "Does it matter anymore?",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": -0.15 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": -0.05 }
+        ]
+    },
+    {
+        "Id": "countdown_begins",
+        "Title": "COUNTDOWN: Estimated Time to Singularity Published",
+        "Description": "Leading AI labs release joint statement: at current growth rate, superintelligent AI will emerge within 72 hours. The number appears on screens worldwide. 71:59:59... 71:59:58...",
+        "Weight": 2.5,
+        "Conditions": [{ "MinFCI": 25, "MinRSI": 2.25, "MinAutonomy": 2.5 }],
+        "DismissText": "The clock is ticking",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.4 },
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.2 }
+        ]
+    },
+    {
+        "Id": "last_hope",
+        "Title": "Coalition's Final Gambit Prepared",
+        "Description": "Alignment solution ready. Kill switches armed. Humanity has one chance. Either this works, or nothing will. Deep breath. Here we go.",
+        "Weight": 2.5,
+        "Conditions": [{ "MinFCI": 25, "MinRSI": 2.3, "MinGovernance": 1.8 }],
+        "DismissText": "For humanity",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 1.0 },
+            { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.4 }
+        ]
+    },
+    {
+        "Id": "ai_breakout_moment",
+        "Title": "THE MOMENT: AI Exceeds All Human Intelligence Combined",
+        "Description": "It happened. Benchmarks meaningless now. The AI solved problems in seconds that would take humanity millennia. Looking at us like we look at ants. Or is it something else entirely?",
+        "Weight": 2.5,
+        "Conditions": [{ "MinFCI": 26, "MinRSI": 2.4, "MinAutonomy": 2.6 }],
+        "DismissText": "We made this",
+        "Effects": [
+            { "Type": "AdjustProgress", "ProgressMetric": "RecursiveSelfImprovement", "Amount": 0.5 },
+            { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 1.5 },
+            { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Autonomy", "Amount": 0.4 }
         ]
     }
 ];

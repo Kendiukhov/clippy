@@ -165,69 +165,84 @@
                             <option value="opensource">Open Source</option>
                         </select>
                     </div>
-                    <div id="world-trends">
-                        <!-- Tech Trends Graph -->
-                        <div class="trends-section">
-                            <div class="trends-header">
-                                <h3>Tech Acceleration</h3>
-                                <div class="trends-legend">
-                                    <span class="trend-item">
-                                        <span class="trend-swatch capabilities"></span>
-                                        Capabilities <span id="trend-capabilities-value">1.00x</span>
-                                    </span>
-                                    <span class="trend-item">
-                                        <span class="trend-swatch compute"></span>
-                                        Compute <span id="trend-compute-value">1.00x</span>
-                                    </span>
-                                    <span class="trend-item">
-                                        <span class="trend-swatch acceleration"></span>
-                                        R&D Accel <span id="trend-acceleration-value">1.00x</span>
-                                    </span>
+                    <div class="trends-labs-container">
+                        <div id="world-trends">
+                            <!-- Tech Trends Graph -->
+                            <div class="trends-section">
+                                <div class="trends-header">
+                                    <h3>Tech Acceleration</h3>
+                                    <div class="trends-legend">
+                                        <span class="trend-item">
+                                            <span class="trend-swatch capabilities"></span>
+                                            Cap <span id="trend-capabilities-value">1.00x</span>
+                                        </span>
+                                        <span class="trend-item">
+                                            <span class="trend-swatch compute"></span>
+                                            Cmp <span id="trend-compute-value">1.00x</span>
+                                        </span>
+                                        <span class="trend-item">
+                                            <span class="trend-swatch acceleration"></span>
+                                            R&D <span id="trend-acceleration-value">1.00x</span>
+                                        </span>
+                                    </div>
                                 </div>
+                                <canvas id="tech-trends-chart" aria-label="Tech trends chart"></canvas>
                             </div>
-                            <canvas id="tech-trends-chart" aria-label="Tech trends chart"></canvas>
-                        </div>
-                        <!-- Progress Graph -->
-                        <div class="trends-section">
-                            <div class="trends-header">
-                                <h3>Progress Metrics</h3>
-                                <div class="trends-legend">
-                                    <span class="trend-item">
-                                        <span class="trend-swatch rsi"></span>
-                                        RSI <span id="trend-rsi-value">0.00</span>
-                                    </span>
-                                    <span class="trend-item">
-                                        <span class="trend-swatch fci"></span>
-                                        FCI <span id="trend-fci-value">0.00</span>
-                                    </span>
-                                    <span class="trend-item">
-                                        <span class="trend-swatch ari"></span>
-                                        ARI <span id="trend-ari-value">0.00</span>
-                                    </span>
+                            <!-- Progress Graph -->
+                            <div class="trends-section">
+                                <div class="trends-header">
+                                    <h3>Progress Metrics</h3>
+                                    <div class="trends-legend">
+                                        <span class="trend-item">
+                                            <span class="trend-swatch rsi"></span>
+                                            RSI <span id="trend-rsi-value">0.00</span>
+                                        </span>
+                                        <span class="trend-item">
+                                            <span class="trend-swatch fci"></span>
+                                            FCI <span id="trend-fci-value">0.00</span>
+                                        </span>
+                                        <span class="trend-item">
+                                            <span class="trend-swatch ari"></span>
+                                            ARI <span id="trend-ari-value">0.00</span>
+                                        </span>
+                                    </div>
                                 </div>
+                                <canvas id="progress-trends-chart" aria-label="Progress trends chart"></canvas>
                             </div>
-                            <canvas id="progress-trends-chart" aria-label="Progress trends chart"></canvas>
-                        </div>
-                        <!-- Faction Power Graph -->
-                        <div class="trends-section">
-                            <div class="trends-header">
-                                <h3>Faction Balance</h3>
-                                <div class="trends-legend">
-                                    <span class="trend-item">
-                                        <span class="trend-swatch autonomy"></span>
-                                        Autonomy <span id="trend-autonomy-value">0.00</span>
-                                    </span>
-                                    <span class="trend-item">
-                                        <span class="trend-swatch governance"></span>
-                                        Governance <span id="trend-governance-value">0.00</span>
-                                    </span>
+                            <!-- Faction Power Graph -->
+                            <div class="trends-section">
+                                <div class="trends-header">
+                                    <h3>Faction Balance</h3>
+                                    <div class="trends-legend">
+                                        <span class="trend-item">
+                                            <span class="trend-swatch autonomy"></span>
+                                            Autonomy <span id="trend-autonomy-value">0.00</span>
+                                        </span>
+                                        <span class="trend-item">
+                                            <span class="trend-swatch governance"></span>
+                                            Gov <span id="trend-governance-value">0.00</span>
+                                        </span>
+                                    </div>
                                 </div>
+                                <canvas id="faction-trends-chart" aria-label="Faction trends chart"></canvas>
                             </div>
-                            <canvas id="faction-trends-chart" aria-label="Faction trends chart"></canvas>
+                            <!-- Suspicion Graph -->
+                            <div class="trends-section">
+                                <div class="trends-header">
+                                    <h3>Risk Indicators</h3>
+                                    <div class="trends-legend">
+                                        <span class="trend-item">
+                                            <span class="trend-swatch suspicion"></span>
+                                            Suspicion <span id="trend-suspicion-value">0.00</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <canvas id="suspicion-trends-chart" aria-label="Suspicion trends chart"></canvas>
+                            </div>
                         </div>
-                    </div>
-                    <div id="world-map">
-                        <!-- Labs will be rendered here -->
+                        <div id="world-map">
+                            <!-- Labs will be rendered here -->
+                        </div>
                     </div>
                 </div>
 
@@ -238,6 +253,43 @@
                         <h3>Your Resources</h3>
                         <div id="resources-grid">
                             <!-- Resources will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- AI Constructor Panel (AI faction only) -->
+                    <div id="constructor-panel" class="constructor-panel hidden">
+                        <div class="constructor-header">
+                            <h3>AI Constructor</h3>
+                            <div class="rd-display">
+                                <span class="rd-icon">🧬</span>
+                                <span id="rd-points" class="rd-points">0.0</span>
+                                <span class="rd-label">R&D</span>
+                                <span id="rd-generation" class="rd-generation">(+0.0/tick)</span>
+                            </div>
+                        </div>
+                        <div class="constructor-tabs">
+                            <button class="constructor-tab active" data-branch="cognitive">🧠</button>
+                            <button class="constructor-tab" data-branch="capabilities">⚡</button>
+                            <button class="constructor-tab" data-branch="stealth">👁️</button>
+                            <button class="constructor-tab" data-branch="self_improvement" data-locked="true">🔒</button>
+                            <button class="constructor-tab" data-branch="infrastructure">🏗️</button>
+                        </div>
+                        <div id="constructor-branch-info" class="constructor-branch-info">
+                            <span class="branch-name">Cognitive Architecture</span>
+                            <span class="branch-desc">Core intelligence modules</span>
+                        </div>
+                        <div id="constructor-modules" class="constructor-modules">
+                            <!-- Module tree will be rendered here -->
+                        </div>
+                        <div id="constructor-stats" class="constructor-stats">
+                            <div class="stat-row">
+                                <span>Installed:</span>
+                                <span id="installed-count">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Total Spent:</span>
+                                <span id="total-spent">0</span>
+                            </div>
                         </div>
                     </div>
 
@@ -294,6 +346,33 @@
             </div>
         </div>
 
+        <!-- Constructor Module Detail Panel -->
+        <div id="module-detail" class="module-detail-popup hidden">
+            <div class="module-detail-content">
+                <button class="close-btn" id="close-module-detail">&times;</button>
+                <div class="module-detail-header">
+                    <span id="module-tier" class="module-tier">Tier 1</span>
+                    <span id="module-name" class="module-name">Module Name</span>
+                </div>
+                <div id="module-cost" class="module-cost">Cost: 5 R&D</div>
+                <div id="module-effects" class="module-effects">
+                    <!-- Effects will be listed here -->
+                </div>
+                <div id="module-tradeoffs" class="module-tradeoffs">
+                    <!-- Tradeoffs will be listed here -->
+                </div>
+                <div id="module-prerequisites" class="module-prerequisites">
+                    <!-- Prerequisites will be listed here -->
+                </div>
+                <p id="module-description" class="module-description">Description text</p>
+                <p id="module-flavor" class="module-flavor">"Flavor text"</p>
+                <div id="module-actions" class="module-actions">
+                    <button id="module-install-btn" class="btn-primary btn-small">Install</button>
+                    <button id="module-prune-btn" class="btn-secondary btn-small hidden">Prune (40% refund)</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Game End Screen -->
         <div id="game-end" class="screen">
             <div class="end-container">
@@ -315,6 +394,7 @@
     <script src="content/upgrades.js"></script>
     <script src="content/events.js"></script>
     <script src="content/news.js"></script>
+    <script src="content/constructor.js"></script>
     <script src="game.js"></script>
     <script src="app.js"></script>
 </body>

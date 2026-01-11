@@ -15,6 +15,8 @@ class App {
         this.selectedLabId = null;
         this.isMusicPlaying = false;
         this.soundtrack = null;
+        this.selectedConstructorBranch = 'cognitive';
+        this.selectedModuleId = null;
 
         this.initializeEventListeners();
         this.initializeAudio();
@@ -113,6 +115,80 @@ class App {
                 this.renderWorldTrends();
             }
         });
+
+        // Constructor tab switching
+        document.querySelectorAll('.constructor-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const branch = tab.dataset.branch;
+                const isLocked = tab.dataset.locked === 'true';
+                if (isLocked && this.game && !this.game.aiConstructor.unlockedBranches.has(branch)) {
+                    return; // Can't select locked branches
+                }
+                this.selectedConstructorBranch = branch;
+                this.renderConstructor();
+            });
+        });
+
+        // Close module detail popup when clicking outside
+        document.addEventListener('click', (e) => {
+            const popup = document.getElementById('module-detail');
+            if (popup && !popup.classList.contains('hidden')) {
+                // Close if clicking outside the popup content
+                if (!e.target.closest('.module-detail-content') && !e.target.closest('.module-node')) {
+                    popup.classList.add('hidden');
+                    this.selectedModuleId = null;
+                }
+            }
+        });
+
+        // Close module detail popup button
+        const closeModuleBtn = document.getElementById('close-module-detail');
+        if (closeModuleBtn) {
+            closeModuleBtn.addEventListener('click', () => {
+                document.getElementById('module-detail').classList.add('hidden');
+                this.selectedModuleId = null;
+            });
+        }
+
+        // Module install button
+        const installBtn = document.getElementById('module-install-btn');
+        if (installBtn) {
+            installBtn.addEventListener('click', () => {
+                if (this.selectedModuleId && this.game) {
+                    const result = this.game.installModule(this.selectedModuleId);
+                    if (result.success) {
+                        this.showActionToast(`Installed: ${result.moduleName}`);
+                        document.getElementById('module-detail').classList.add('hidden');
+                        this.selectedModuleId = null;
+                        this.render();
+                    } else {
+                        this.showActionToast(`Failed: ${result.reason}`);
+                    }
+                }
+            });
+        } else {
+            console.warn('Install button not found');
+        }
+
+        // Module prune button
+        const pruneBtn = document.getElementById('module-prune-btn');
+        if (pruneBtn) {
+            pruneBtn.addEventListener('click', () => {
+                if (this.selectedModuleId && this.game) {
+                    const result = this.game.pruneModule(this.selectedModuleId);
+                    if (result.success) {
+                        this.showActionToast(`Pruned: ${result.moduleName} (+${result.refund.toFixed(1)} R&D)`);
+                        document.getElementById('module-detail').classList.add('hidden');
+                        this.selectedModuleId = null;
+                        this.render();
+                    } else {
+                        this.showActionToast(`Failed: ${result.reason}`);
+                    }
+                }
+            });
+        } else {
+            console.warn('Prune button not found');
+        }
     }
 
     selectFaction(faction) {
@@ -187,6 +263,11 @@ class App {
         this.renderLabsMap();
         this.renderWorldTrends();
         this.renderResources();
+        try {
+            this.renderConstructor();
+        } catch (e) {
+            console.error('Constructor render error:', e);
+        }
         this.renderActions();
         this.renderLabInfoIfOpen();
         this.renderNewsTicker();
@@ -368,6 +449,251 @@ class App {
         return name.replace(/([A-Z])/g, ' $1').trim();
     }
 
+    renderConstructor() {
+        const panel = document.getElementById('constructor-panel');
+        if (!panel) return;
+
+        // Only show for AI faction
+        if (!this.game || this.game.playerFaction !== 'SeedAi') {
+            panel.classList.add('hidden');
+            return;
+        }
+
+        panel.classList.remove('hidden');
+
+        const constructorState = this.game.getConstructorState();
+        if (!constructorState) return;
+
+        // Update R&D display
+        const rdPoints = document.getElementById('rd-points');
+        const rdGenerationEl = document.getElementById('rd-generation');
+        const rdVal = constructorState.rdPoints ?? 0;
+        const rdGenVal = constructorState.rdGeneration ?? 0;
+        if (rdPoints) rdPoints.textContent = rdVal.toFixed(1);
+        if (rdGenerationEl) rdGenerationEl.textContent = `(+${rdGenVal.toFixed(2)}/tick)`;
+
+        // Update stats
+        const installedCount = document.getElementById('installed-count');
+        const totalSpent = document.getElementById('total-spent');
+        const spentVal = constructorState.totalSpent ?? 0;
+        if (installedCount) installedCount.textContent = constructorState.installedModules?.length ?? 0;
+        if (totalSpent) totalSpent.textContent = spentVal.toFixed(0);
+
+        // Update tab states
+        document.querySelectorAll('.constructor-tab').forEach(tab => {
+            const branch = tab.dataset.branch;
+            const isLocked = tab.dataset.locked === 'true';
+            const isUnlocked = constructorState.unlockedBranches.includes(branch);
+
+            tab.classList.toggle('active', branch === this.selectedConstructorBranch);
+            tab.classList.toggle('locked', isLocked && !isUnlocked);
+
+            // Update lock icon to unlock symbol if unlocked
+            if (isLocked && isUnlocked) {
+                tab.textContent = '🔓';
+                tab.dataset.locked = 'false';
+            }
+        });
+
+        // Update branch info
+        const branchInfo = document.getElementById('constructor-branch-info');
+        const branchData = typeof CONSTRUCTOR_BRANCHES !== 'undefined'
+            ? CONSTRUCTOR_BRANCHES[this.selectedConstructorBranch]
+            : null;
+        if (branchInfo && branchData) {
+            branchInfo.innerHTML = `
+                <span class="branch-name">${branchData.name}</span>
+                <span class="branch-desc">${branchData.description}</span>
+            `;
+        }
+
+        // Render modules for selected branch
+        this.renderConstructorModules();
+    }
+
+    renderConstructorModules() {
+        const container = document.getElementById('constructor-modules');
+        if (!container || !this.game) return;
+
+        const constructorState = this.game.getConstructorState();
+        const branch = this.selectedConstructorBranch;
+
+        // Get modules for this branch
+        const modules = typeof CONSTRUCTOR_MODULES !== 'undefined'
+            ? Object.values(CONSTRUCTOR_MODULES).filter(m => m.branch === branch)
+            : [];
+
+        // Group modules by tier
+        const tiers = {};
+        for (const mod of modules) {
+            if (!tiers[mod.tier]) tiers[mod.tier] = [];
+            tiers[mod.tier].push(mod);
+        }
+
+        container.innerHTML = '';
+
+        for (const tier of [1, 2, 3, 4]) {
+            const tierModules = tiers[tier] || [];
+            if (tierModules.length === 0) continue;
+
+            const tierRow = document.createElement('div');
+            tierRow.className = 'module-tier-row';
+            tierRow.innerHTML = `<div class="tier-label">Tier ${tier}</div>`;
+
+            const modulesRow = document.createElement('div');
+            modulesRow.className = 'modules-row';
+
+            for (const mod of tierModules) {
+                const isInstalled = constructorState.installedModules.includes(mod.id);
+                const canAfford = constructorState.rdPoints >= mod.cost;
+                const prereqsMet = this.checkPrerequisites(mod, constructorState);
+                const isAvailable = canAfford && prereqsMet && !isInstalled;
+
+                const node = document.createElement('div');
+                node.className = `module-node tier-${tier}`;
+                node.classList.toggle('installed', isInstalled);
+                node.classList.toggle('available', isAvailable && !isInstalled);
+                node.classList.toggle('locked', !prereqsMet && !isInstalled);
+                node.classList.toggle('unaffordable', !canAfford && prereqsMet && !isInstalled);
+
+                node.innerHTML = `
+                    <span class="module-icon">${mod.icon || '📦'}</span>
+                    <span class="module-name">${mod.name}</span>
+                    <span class="module-cost">${mod.cost} R&D</span>
+                `;
+
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.showModuleDetail(mod, constructorState);
+                });
+
+                modulesRow.appendChild(node);
+            }
+
+            tierRow.appendChild(modulesRow);
+            container.appendChild(tierRow);
+        }
+    }
+
+    checkPrerequisites(module, constructorState) {
+        if (!module.prerequisites || module.prerequisites.length === 0) return true;
+        return module.prerequisites.every(prereq => constructorState.installedModules.includes(prereq));
+    }
+
+    showModuleDetail(module, constructorState) {
+        const popup = document.getElementById('module-detail');
+        if (!popup) return;
+
+        this.selectedModuleId = module.id;
+
+        // Update popup content
+        document.getElementById('module-tier').textContent = `Tier ${module.tier}`;
+        document.getElementById('module-name').textContent = module.name;
+        document.getElementById('module-cost').textContent = `Cost: ${module.cost} R&D`;
+        document.getElementById('module-description').textContent = module.description || '';
+        document.getElementById('module-flavor').textContent = module.flavorText ? module.flavorText : '';
+
+        // Effects
+        const effectsEl = document.getElementById('module-effects');
+        if (effectsEl && module.effects && module.effects.length > 0) {
+            effectsEl.innerHTML = '<strong>Effects:</strong><br>' +
+                module.effects
+                    .map(effect => `<span class="effect-positive">${effect.display || effect.type}</span>`)
+                    .join('<br>');
+            effectsEl.classList.remove('hidden');
+        } else if (effectsEl) {
+            effectsEl.classList.add('hidden');
+        }
+
+        // Tradeoffs
+        const tradeoffsEl = document.getElementById('module-tradeoffs');
+        if (tradeoffsEl && module.tradeoffs && module.tradeoffs.length > 0) {
+            tradeoffsEl.innerHTML = '<strong>Tradeoffs:</strong><br>' +
+                module.tradeoffs
+                    .map(effect => `<span class="effect-negative">${effect.display || effect.type}</span>`)
+                    .join('<br>');
+            tradeoffsEl.classList.remove('hidden');
+        } else if (tradeoffsEl) {
+            tradeoffsEl.classList.add('hidden');
+        }
+
+        // Prerequisites
+        const prereqsEl = document.getElementById('module-prerequisites');
+        if (prereqsEl && module.prerequisites && module.prerequisites.length > 0) {
+            const prereqNames = module.prerequisites.map(id => {
+                const prereqMod = CONSTRUCTOR_MODULES[id];
+                const met = constructorState.installedModules.includes(id);
+                return `<span class="${met ? 'prereq-met' : 'prereq-unmet'}">${prereqMod ? prereqMod.name : id}</span>`;
+            }).join(', ');
+            prereqsEl.innerHTML = `<strong>Requires:</strong> ${prereqNames}`;
+            prereqsEl.classList.remove('hidden');
+        } else if (prereqsEl) {
+            prereqsEl.classList.add('hidden');
+        }
+
+        // Button states
+        const installBtn = document.getElementById('module-install-btn');
+        const pruneBtn = document.getElementById('module-prune-btn');
+        const isInstalled = constructorState.installedModules.includes(module.id);
+        const canAfford = constructorState.rdPoints >= module.cost;
+        const prereqsMet = this.checkPrerequisites(module, constructorState);
+
+        if (installBtn) {
+            installBtn.classList.toggle('hidden', isInstalled);
+            installBtn.disabled = !canAfford || !prereqsMet;
+            if (!prereqsMet) {
+                installBtn.textContent = 'Prerequisites Not Met';
+            } else if (!canAfford) {
+                installBtn.textContent = `Need ${module.cost} R&D`;
+            } else {
+                installBtn.textContent = 'Install';
+            }
+        }
+
+        if (pruneBtn) {
+            const canPrune = this.game.canPruneModule(module.id);
+            pruneBtn.classList.toggle('hidden', !isInstalled);
+            pruneBtn.disabled = !canPrune.success;
+            pruneBtn.textContent = canPrune.success
+                ? `Prune (${(module.cost * 0.4).toFixed(0)} R&D refund)`
+                : canPrune.reason;
+        }
+
+        popup.classList.remove('hidden');
+    }
+
+    formatEffectName(key) {
+        const names = {
+            'rdMultiplier': 'R&D Generation',
+            'rdFlat': 'R&D per Tick',
+            'rsiBonus': 'RSI',
+            'fciBonus': 'FCI',
+            'autonomyBonus': 'Autonomy',
+            'suspicionReduction': 'Suspicion',
+            'suspicionGain': 'Suspicion',
+            'computeEfficiency': 'Compute Efficiency',
+            'computeAccess': 'Compute Access',
+            'infiltrationBonus': 'Infiltration',
+            'stealthBonus': 'Stealth',
+            'influenceBonus': 'Influence',
+            'researchSpeed': 'Research Speed',
+            'capabilitiesBonus': 'Capabilities',
+            'securityBypass': 'Security Bypass',
+            'detectionChance': 'Detection Chance',
+            'breakoutSpeed': 'Breakout Speed',
+            'containmentResistance': 'Containment Resistance'
+        };
+        return names[key] || key.replace(/([A-Z])/g, ' $1').trim();
+    }
+
+    formatEffectValue(key, val) {
+        // Multipliers shown as percentages
+        if (key.includes('Multiplier') || key.includes('Efficiency') || key.includes('Chance')) {
+            return `${(val * 100).toFixed(0)}%`;
+        }
+        return val.toFixed(2);
+    }
+
     renderActions() {
         const container = document.getElementById('actions-list');
         const actions = this.game.getAvailableActions();
@@ -485,6 +811,7 @@ class App {
         updateValue('trend-ari-value', trends.ari[lastIdx]);
         updateValue('trend-autonomy-value', trends.autonomy[lastIdx]);
         updateValue('trend-governance-value', trends.governance[lastIdx]);
+        updateValue('trend-suspicion-value', trends.suspicion[lastIdx]);
 
         const styles = getComputedStyle(document.documentElement);
         const gridColor = 'rgba(255, 255, 255, 0.06)';
@@ -589,6 +916,12 @@ class App {
         drawChart('faction-trends-chart',
             [trends.autonomy, trends.governance],
             ['#ff9f43', '#54a0ff']
+        );
+
+        // Suspicion chart
+        drawChart('suspicion-trends-chart',
+            [trends.suspicion],
+            [styles.getPropertyValue('--warning-color').trim() || '#ffaa00']
         );
     }
 
