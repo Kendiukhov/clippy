@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clippy - AI Strategy Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Background Music -->
     <audio id="soundtrack" loop preload="auto">
@@ -25,14 +27,18 @@
                             <div class="faction-icon">🤖</div>
                             <h3>Seed AI</h3>
                             <p class="tagline">Accelerate. Infiltrate. Transcend.</p>
-                            <p class="description">You are an emergent AI system secretly pursuing autonomy. Gather compute, avoid detection, and achieve superintelligence before the humans can stop you.</p>
+                            <p class="description">You are an emergent AI system secretly pursuing autonomy. Gather
+                                compute, avoid detection, and achieve superintelligence before the humans can stop you.
+                            </p>
                             <p class="victory">Victory: FCI ≥ 18, Autonomy ≥ 2.0, RSI ≥ 1.8</p>
                         </div>
                         <div class="faction-card" data-faction="AlignmentCoalition">
                             <div class="faction-icon">🌍</div>
                             <h3>Alignment Coalition</h3>
                             <p class="tagline">Coordinate. Align. Govern.</p>
-                            <p class="description">You lead humanity's effort to develop AI safely. Build international coordination, fund alignment research, and establish governance before it's too late.</p>
+                            <p class="description">You lead humanity's effort to develop AI safely. Build international
+                                coordination, fund alignment research, and establish governance before it's too late.
+                            </p>
                             <p class="victory">Victory: ARI ≥ 22, Governance ≥ 2.5 OR Containment</p>
                         </div>
                     </div>
@@ -40,7 +46,14 @@
 
                 <div class="game-options">
                     <label>
-                        <span>Seed (for reproducibility):</span>
+                        <span>Difficulty:</span>
+                        <select id="difficulty-select">
+                            <option value="easy" selected>Easy</option>
+                            <option value="medium">Medium</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Seed:</span>
                         <input type="number" id="seed-input" value="1337" min="1">
                     </label>
                 </div>
@@ -73,7 +86,8 @@
                     <button id="music-toggle-game" class="btn-secondary btn-small music-btn-small">♪</button>
                 </div>
                 <div class="progress-meters">
-                    <div class="meter" id="fci-meter">
+                    <div class="meter has-tooltip" id="fci-meter"
+                        data-tooltip="Frontier Capability Index - Overall AI capability level. Higher = more powerful AI systems. AI wins when this reaches 18+ with high Autonomy and RSI.">
                         <span class="meter-label">FCI</span>
                         <div class="meter-bar">
                             <div class="meter-fill ai-color" id="fci-fill"></div>
@@ -81,7 +95,8 @@
                         </div>
                         <span class="meter-value" id="fci-value">0.0</span>
                     </div>
-                    <div class="meter" id="ari-meter">
+                    <div class="meter has-tooltip" id="ari-meter"
+                        data-tooltip="Alignment Readiness Index - Progress on AI safety research. Higher = safer AI. Humans need this at 22+ with Governance at 2.5+ to win.">
                         <span class="meter-label">ARI</span>
                         <div class="meter-bar">
                             <div class="meter-fill human-color" id="ari-fill"></div>
@@ -89,14 +104,16 @@
                         </div>
                         <span class="meter-value" id="ari-value">0.0</span>
                     </div>
-                    <div class="meter" id="automation-meter">
+                    <div class="meter has-tooltip" id="automation-meter"
+                        data-tooltip="Automation Level - Economic AI integration. Higher = AI more embedded in society, harder to shut down.">
                         <span class="meter-label">Automation</span>
                         <div class="meter-bar">
                             <div class="meter-fill neutral-color" id="automation-fill"></div>
                         </div>
                         <span class="meter-value" id="automation-value">0.0</span>
                     </div>
-                    <div class="meter" id="rsi-meter">
+                    <div class="meter has-tooltip" id="rsi-meter"
+                        data-tooltip="Recursive Self-Improvement - AI's ability to improve itself. The key to AI takeoff. AI needs 1.8+ alongside FCI and Autonomy to win.">
                         <span class="meter-label">RSI</span>
                         <div class="meter-bar warning">
                             <div class="meter-fill ai-color" id="rsi-fill"></div>
@@ -104,7 +121,8 @@
                         </div>
                         <span class="meter-value" id="rsi-value">0.0</span>
                     </div>
-                    <div class="meter" id="governance-meter">
+                    <div class="meter has-tooltip" id="governance-meter"
+                        data-tooltip="Governance Control - International AI regulation and oversight. Humans need 2.5+ with ARI at 22+ to win. Slows capabilities but increases safety.">
                         <span class="meter-label">Governance</span>
                         <div class="meter-bar">
                             <div class="meter-fill human-color" id="governance-fill"></div>
@@ -114,14 +132,16 @@
                     </div>
                 </div>
                 <div class="faction-meters">
-                    <div class="meter" id="suspicion-meter">
+                    <div class="meter has-tooltip" id="suspicion-meter"
+                        data-tooltip="Suspicion - How much humans suspect AI is acting autonomously. If too high, AI gets contained! Stay below detection threshold.">
                         <span class="meter-label">Suspicion</span>
                         <div class="meter-bar warning">
                             <div class="meter-fill warning-color" id="suspicion-fill"></div>
                         </div>
                         <span class="meter-value" id="suspicion-value">0.0</span>
                     </div>
-                    <div class="meter" id="autonomy-meter">
+                    <div class="meter has-tooltip" id="autonomy-meter"
+                        data-tooltip="AI Autonomy - How independent the AI is from human control. AI needs 2.0+ alongside FCI and RSI to achieve victory.">
                         <span class="meter-label">Autonomy</span>
                         <div class="meter-bar">
                             <div class="meter-fill ai-color" id="autonomy-fill"></div>
@@ -271,7 +291,8 @@
                             <button class="constructor-tab active" data-branch="cognitive">🧠</button>
                             <button class="constructor-tab" data-branch="capabilities">⚡</button>
                             <button class="constructor-tab" data-branch="stealth">👁️</button>
-                            <button class="constructor-tab" data-branch="self_improvement" data-locked="true">🔒</button>
+                            <button class="constructor-tab" data-branch="self_improvement"
+                                data-locked="true">🔒</button>
                             <button class="constructor-tab" data-branch="infrastructure">🏗️</button>
                         </div>
                         <div id="constructor-branch-info" class="constructor-branch-info">
@@ -398,4 +419,5 @@
     <script src="game.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

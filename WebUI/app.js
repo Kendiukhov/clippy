@@ -29,7 +29,7 @@ class App {
             // Handle audio end (backup for loop attribute)
             this.soundtrack.addEventListener('ended', () => {
                 this.soundtrack.currentTime = 0;
-                this.soundtrack.play().catch(() => {});
+                this.soundtrack.play().catch(() => { });
             });
         }
     }
@@ -208,7 +208,8 @@ class App {
         if (!this.selectedFaction) return;
 
         const seed = parseInt(document.getElementById('seed-input').value) || 1337;
-        this.game = new Game(this.selectedFaction, seed);
+        const difficulty = document.getElementById('difficulty-select').value || 'easy';
+        this.game = new Game(this.selectedFaction, seed, difficulty);
         this.isPausedForEvent = false;
         this.isPausedForNews = false;
         this.isManualPause = false;
@@ -433,12 +434,27 @@ class App {
         const faction = this.game.getPlayerFactionState();
         const container = document.getElementById('resources-grid');
 
+        // Resource tooltips for each faction
+        const tooltips = {
+            // AI faction resources
+            'Budget': 'Financial resources for operations. Spent on actions and upgrades.',
+            'Influence': 'Social and political influence. Used to manipulate humans and events.',
+            'Stealth': 'Ability to hide activities. Higher stealth reduces suspicion gain.',
+            'ComputeAccess': 'Access to computing power. Accelerates capabilities and RSI.',
+            'Infiltration': 'Presence in labs and systems. Enables sabotage and data theft.',
+            'HardPower': 'Physical/infrastructure control. Enables direct action in late game.',
+            // Human faction resources
+            'Coordination': 'International cooperation level. Enables joint actions and treaties.',
+            'Trust': 'Public and lab trust in Coalition. Affects cooperation and funding.',
+            'Oversight': 'Monitoring capability over AI systems. Increases AI suspicion gain.'
+        };
+
         const resourceNames = this.game.playerFaction === 'SeedAi'
             ? ['Budget', 'Influence', 'Stealth', 'ComputeAccess', 'Infiltration', 'HardPower']
             : ['Budget', 'Coordination', 'Trust', 'Influence', 'Oversight'];
 
         container.innerHTML = resourceNames.map(name => `
-            <div class="resource-item">
+            <div class="resource-item has-tooltip" data-tooltip="${tooltips[name] || ''}">
                 <span class="resource-name">${this.formatResourceName(name)}</span>
                 <span class="resource-value">${faction.getResource(name).toFixed(2)}</span>
             </div>
@@ -1119,7 +1135,7 @@ class App {
 
     showGameEnd(result) {
         const isVictory = (this.game.playerFaction === 'SeedAi' && result.outcome === GameOutcome.AiVictory) ||
-                          (this.game.playerFaction === 'AlignmentCoalition' && result.outcome === GameOutcome.HumanVictory);
+            (this.game.playerFaction === 'AlignmentCoalition' && result.outcome === GameOutcome.HumanVictory);
         const isContainment = result.reason.toLowerCase().includes('containment');
         const isTimeout = result.reason.toLowerCase().includes('arrived');
 

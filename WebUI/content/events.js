@@ -865,7 +865,8 @@ const EVENTS = [
                 "Effects": [
                     { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Coordination", "Amount": 0.2 },
                     { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
-                    { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 }
+                    { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
+                    { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Trust", "Amount": -0.1 }
                 ]
             }
         ]
@@ -1728,7 +1729,7 @@ const EVENTS = [
                 "Description": "Understand what AI is thinking",
                 "Effects": [
                     { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
-                    { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Funding", "Amount": 0.3 },
+                    { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Funding", "Amount": 0.15 },
                     { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 }
                 ]
             },

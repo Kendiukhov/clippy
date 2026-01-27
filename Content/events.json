@@ -510,7 +510,8 @@
         "Label": "Address public concerns",
         "Effects": [
           { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.3 },
-          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 }
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.2 },
+          { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Coordination", "Amount": -0.1 }
         ]
       },
       {
@@ -701,7 +702,8 @@
         "Label": "Drill baby drill",
         "Effects": [
           { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "EnergyMW", "Amount": 100.0 },
-          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 }
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.3 },
+          { "Type": "AdjustMeter", "Target": "SeedAi", "Meter": "Suspicion", "Amount": 0.08 }
         ]
       }
     ]
@@ -745,7 +747,8 @@
         "Label": "Fund follow-up research",
         "Effects": [
           { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.5 },
-          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": 0.1 }
+          { "Type": "ModifyRegionStat", "RegionId": "north_america", "RegionStat": "SafetyRnD", "Amount": 0.1 },
+          { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Budget", "Amount": -0.2 }
         ]
       },
       {
@@ -823,7 +826,8 @@
         "Label": "Sign the treaty",
         "Effects": [
           { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.7 },
-          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 }
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.3 },
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": -0.3 }
         ]
       },
       {
@@ -849,7 +853,8 @@
         "Label": "Use anniversary for policy push",
         "Effects": [
           { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.5 },
-          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 }
+          { "Type": "AdjustProgress", "ProgressMetric": "AlignmentReadinessIndex", "Amount": 0.4 },
+          { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Trust", "Amount": -0.1 }
         ]
       },
       {
@@ -927,7 +932,8 @@
         "Label": "Government subsidies for AI",
         "Effects": [
           { "Type": "AdjustProgress", "ProgressMetric": "GovernanceControl", "Amount": 0.2 },
-          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 }
+          { "Type": "AdjustProgress", "ProgressMetric": "FrontierCapabilityIndex", "Amount": 0.2 },
+          { "Type": "AddResource", "Target": "AlignmentCoalition", "Resource": "Budget", "Amount": -0.15 }
         ]
       },
       {

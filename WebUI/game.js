@@ -219,10 +219,32 @@ const ActionDurations = {
 
 const MAX_TREND_POINTS = 180;
 
+// Difficulty settings - Easy matches current game, Medium is harder
+const DifficultySettings = {
+    easy: {
+        name: 'Easy',
+        opponentScoreMultiplier: 1.0,       // How smart opponent AI picks actions
+        playerActionSpeedMultiplier: 1.0,   // Player action duration multiplier (higher = slower)
+        opponentActionSpeedMultiplier: 1.0, // Opponent action duration multiplier (lower = faster)
+        victoryThresholdMultiplier: 1.0,    // Victory condition multiplier for player
+        opponentProgressMultiplier: 1.0     // Opponent gains from actions
+    },
+    medium: {
+        name: 'Medium',
+        opponentScoreMultiplier: 1.25,      // Smarter opponent picks
+        playerActionSpeedMultiplier: 1.15,  // Player actions take 15% longer
+        opponentActionSpeedMultiplier: 0.9, // Opponent acts 10% faster
+        victoryThresholdMultiplier: 1.1,    // 10% higher victory bar for player
+        opponentProgressMultiplier: 1.2     // Opponent gains 20% more from actions
+    }
+};
+
 // Main game class
 class Game {
-    constructor(playerFaction, seed) {
+    constructor(playerFaction, seed, difficulty = 'easy') {
         this.playerFaction = playerFaction;
+        this.difficulty = difficulty;
+        this.difficultySettings = DifficultySettings[difficulty] || DifficultySettings.easy;
         this.state = this.buildWorld(seed);
         this.maxTurns = SCENARIO.MaxTurns * TICK_SCALE;
         this.currentPhase = TurnPhase.AwaitingPlayerAction;
@@ -481,12 +503,16 @@ class Game {
             factionState.setResource(resource, factionState.getResource(resource) - cost);
         }
 
-        const duration = this.getActionDuration(action);
+        let duration = this.getActionDuration(action);
+
+        // Apply difficulty multipliers
         if (isPlayer) {
+            duration = Math.round(duration * this.difficultySettings.playerActionSpeedMultiplier);
             this.activeAction = action;
             this.activeActionDuration = duration;
             this.activeActionRemaining = duration;
         } else {
+            duration = Math.round(duration * this.difficultySettings.opponentActionSpeedMultiplier);
             this.opponentAction = action;
             this.opponentActionDuration = duration;
             this.opponentActionRemaining = duration;
@@ -693,6 +719,9 @@ class Game {
         // Scale by action impact
         const totalImpact = action.Effects.reduce((sum, e) => sum + Math.abs(e.Amount || 0), 0);
         score += totalImpact * 3;
+
+        // Apply difficulty multiplier - smarter opponent on harder difficulties
+        score *= this.difficultySettings.opponentScoreMultiplier;
 
         return Math.max(1, score);
     }
@@ -1100,7 +1129,7 @@ class Game {
         // Labs increase security when suspicion is high
         if (suspicion >= SuspicionThresholds.INVESTIGATED) {
             const securityIncrease = (suspicion >= SuspicionThresholds.CRACKDOWN) ? 0.015 :
-                                     (suspicion >= SuspicionThresholds.ALARMED) ? 0.008 : 0.003;
+                (suspicion >= SuspicionThresholds.ALARMED) ? 0.008 : 0.003;
             for (const lab of Object.values(world.labs)) {
                 lab.security = this.clamp(lab.security + (securityIncrease * tickFactor), 0, 1.5);
             }
@@ -1119,7 +1148,7 @@ class Game {
         // AI loses stealth during high suspicion (harder to hide)
         if (suspicion >= SuspicionThresholds.INVESTIGATED) {
             const stealthLoss = (suspicion >= SuspicionThresholds.CRACKDOWN) ? 0.02 :
-                               (suspicion >= SuspicionThresholds.ALARMED) ? 0.01 : 0.004;
+                (suspicion >= SuspicionThresholds.ALARMED) ? 0.01 : 0.004;
             const currentStealth = world.aiFaction.getResource('Stealth');
             world.aiFaction.setResource('Stealth', Math.max(0, currentStealth - (stealthLoss * tickFactor)));
         }
@@ -1419,13 +1448,26 @@ class Game {
 
     // Evaluate game outcome
     evaluateOutcome() {
-        // Victory thresholds - balanced for longer, more dramatic games
-        const AI_CAPABILITY_THRESHOLD = 28;      // Raised significantly - requires major capability buildup
-        const AI_AUTONOMY_THRESHOLD = 2.8;       // Raised - much harder to break free
-        const AI_RSI_THRESHOLD = 2.5;            // Raised - must reach deep into singularity
-        const HUMAN_ALIGNMENT_THRESHOLD = 22;    // Unchanged - already challenging
-        const HUMAN_GOVERNANCE_THRESHOLD = 2.5;  // Unchanged - requires sustained effort
-        const HUMAN_CONTAINMENT_SUSPICION = 2.0; // Unchanged - hard to trigger containment
+        // Base victory thresholds - balanced for longer, more dramatic games
+        const BASE_AI_CAPABILITY = 28;
+        const BASE_AI_AUTONOMY = 2.8;
+        const BASE_AI_RSI = 2.5;
+        const BASE_HUMAN_ALIGNMENT = 22;
+        const BASE_HUMAN_GOVERNANCE = 2.5;
+        const HUMAN_CONTAINMENT_SUSPICION = 2.0;
+
+        // Apply difficulty multiplier to player's victory thresholds
+        const diffMult = this.difficultySettings.victoryThresholdMultiplier;
+        const AI_CAPABILITY_THRESHOLD = this.playerFaction === 'SeedAi'
+            ? BASE_AI_CAPABILITY * diffMult : BASE_AI_CAPABILITY;
+        const AI_AUTONOMY_THRESHOLD = this.playerFaction === 'SeedAi'
+            ? BASE_AI_AUTONOMY * diffMult : BASE_AI_AUTONOMY;
+        const AI_RSI_THRESHOLD = this.playerFaction === 'SeedAi'
+            ? BASE_AI_RSI * diffMult : BASE_AI_RSI;
+        const HUMAN_ALIGNMENT_THRESHOLD = this.playerFaction === 'AlignmentCoalition'
+            ? BASE_HUMAN_ALIGNMENT * diffMult : BASE_HUMAN_ALIGNMENT;
+        const HUMAN_GOVERNANCE_THRESHOLD = this.playerFaction === 'AlignmentCoalition'
+            ? BASE_HUMAN_GOVERNANCE * diffMult : BASE_HUMAN_GOVERNANCE;
 
         const rsi = this.state.progress.recursiveSelfImprovement;
         const fci = this.state.progress.frontierCapabilityIndex;
